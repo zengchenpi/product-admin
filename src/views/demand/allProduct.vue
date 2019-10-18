@@ -23,6 +23,8 @@
 <style lang="scss" scoped>
 .page-allProduct {
     text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
   .el-form {
     padding-top: 30px;
     display: flex;

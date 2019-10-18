@@ -66,13 +66,14 @@
 <style lang="scss" scoped>
    .el-form {
     padding-top: 30px;
-    padding-left: 20px;
+    // padding-left: 20px;
     margin-top: 10px;
     display: flex;
     flex-wrap: wrap;
     width: 99%;
     border: 1px solid #dddddd;
     text-align: right;
+    margin-bottom: 20px;
     background-color: #fff;
     /deep/ .el-form-item {
     margin-right: 100px;

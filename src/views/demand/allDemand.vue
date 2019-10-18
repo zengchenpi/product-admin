@@ -1,47 +1,8 @@
 <template>
   <div class="creative-center">
     <div class="title">
-      <h2>需求中心</h2>
+      <h2>生产中心 > 所有需求</h2>
     </div>
-    <!-- <el-form :inline="true" :model="Ideas" class="demo-form-inline" label-width="75px">
-      <el-form-item label="提出部门">
-        <el-select v-model="Ideas.type" placeholder="请选择部门">
-          <el-option label="精算部1" value="精算部1"></el-option>
-          <el-option label="精算部2" value="精算部2"></el-option>
-          <el-option label="精算部3" value="精算部3"></el-option>
-          <el-option label="精算部4" value="精算部4"></el-option>
-          <el-option label="精算部5" value="精算部5"></el-option>
-          <el-option label="精算部6" value="精算部6"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="产品亮点">
-        <el-input v-model="Ideas.lightspot" placeholder="请输入"></el-input>
-      </el-form-item>
-      <el-form-item label="提出人">
-        <el-input v-model="Ideas.peoplename" placeholder="小芳"></el-input>
-      </el-form-item>
-      <el-form-item label="审批状态">
-        <el-input v-model="Ideas.state" placeholder="未审核"></el-input>
-      </el-form-item>
-      <el-form-item label="需求名称">
-        <el-input v-model="Ideas.ideaName" placeholder="请输入"></el-input>
-      </el-form-item>
-      <el-form-item label="提出时间">
-        <el-form-item prop="time">
-          <el-date-picker
-            type="date"
-            format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy.MM.dd"
-            placeholder="选择日期"
-            v-model="Ideas.time"
-            style="width: 100%;"
-          ></el-date-picker>
-        </el-form-item>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit(Ideas)">搜素</el-button>
-      </el-form-item>
-    </el-form>-->
     <searchFrom :formConfig="formConfig" :value="value" :block="block"></searchFrom>
     <div class="btn">
       <el-dropdown split-button type="primary" @command="handleCommand">
@@ -57,11 +18,9 @@
       </el-dropdown>
     </div>
     <el-table :data="tableData"  border style="width: 100%" @select="select">
-      <!-- <el-table-column type="selection" width="55"></el-table-column> -->
-      <!-- <el-table-column fixed label="ID" type="index" min-width="80px"></el-table-column> -->
-      <el-table-column prop="type" label="需求名称" min-width="100px"></el-table-column>
-      <el-table-column prop="name" label="提出部门" min-width="80px"></el-table-column>
-      <el-table-column prop="province" label="产品亮点" min-width="80px"></el-table-column>
+     
+      <el-table-column align="center" prop="type" label="需求名称" min-width="100px"></el-table-column>
+      <el-table-column align="center" prop="name" label="提出部门" min-width="80px"></el-table-column>
       <el-table-column align="center" prop="time" label="提出时间" min-width="90px"></el-table-column>
       <el-table-column align="center" prop="introducer" label="提出人" min-width="90px"></el-table-column>
       <el-table-column align="center" prop="state" label="状态" min-width="90px"></el-table-column>
@@ -87,7 +46,7 @@
   div {
     &.title {
       height: 60px;
-      border-bottom: 1px solid #999;
+      // border-bottom: 1px solid #999;
       h2 {
         text-align: left;
       }
@@ -141,12 +100,7 @@ export default {
       },
       formConfig: {
         formItemList: [
-          {
-            type: "input",
-            prop: "lightspot",
-            label: "产品亮点:",
-            placeholder: "请输入产品亮点"
-          },
+         
           {
             type: "select",
             prop: "designType",
@@ -182,8 +136,8 @@ export default {
           {
             type: "select",
             prop: "state",
-            label: "审核状态:",
-            placeholder: "请选择提审核状态",
+            label: "状态:",
+            placeholder: "请选择状态",
             optList: [
               {
                 label: "已审核",
@@ -232,13 +186,6 @@ export default {
                 value: "其它"
               }
             ]
-          },
-
-          {
-            type: "input",
-            prop: "lightspot",
-            label: "产品亮点:",
-            placeholder: "请输入产品亮点"
           },
           {
             type: "select",

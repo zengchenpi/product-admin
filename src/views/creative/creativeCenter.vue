@@ -3,7 +3,7 @@
     <div class="title">
       <h2>创意中心</h2>
     </div>
-    <el-form :inline="true" :model="Ideas" class="demo-form-inline" label-width="75px">
+    <!-- <el-form :inline="true" :model="Ideas" class="demo-form-inline" label-width="75px">
       <el-form-item label="产品类型">
         <el-select v-model="Ideas.type" placeholder="选择产品类型">
           <el-option label="寿险" value="寿险"></el-option>
@@ -41,22 +41,23 @@
       <el-form-item>
         <el-button type="primary" @click="onSubmit(Ideas)">搜素</el-button>
       </el-form-item>
-    </el-form>
-    <el-table :data="tableData" style="width: 100%" @select="select">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column fixed label="ID" type="index" min-width="80px"></el-table-column>
-      <el-table-column prop="type" label="产品类型" min-width="80px"></el-table-column>
-      <el-table-column prop="name" label="创意名称" min-width="80px"></el-table-column>
-      <el-table-column prop="province" label="产品亮点" min-width="80px"></el-table-column>
-      <el-table-column prop="salesChannels" label="销售渠道" min-width="90px"></el-table-column>
-      <el-table-column prop="perfect" label="完善度" min-width="80px"></el-table-column>
-      <el-table-column prop="introducer" label="提出人" min-width="90px"></el-table-column>
-      <el-table-column prop="public" label="是否公开" min-width="80px">
+    </el-form> -->
+     <searchFrom :formConfig="formConfig" :value="value" :block="block"></searchFrom>
+    <el-table border :data="tableData" style="width: 100%" @select="select">
+      <el-table-column align="center" type="selection" min-width="55"></el-table-column>
+      <el-table-column align="center"  label="ID" type="index" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="type" label="产品类型" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="name" label="创意名称" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="province" label="产品亮点" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="salesChannels" label="销售渠道" min-width="90px"></el-table-column>
+      <el-table-column align="center" prop="perfect" label="完善度" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="introducer" label="提出人" min-width="90px"></el-table-column>
+      <el-table-column align="center" prop="public" label="是否公开" min-width="80px">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.public" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="similar" label="相似" min-width="80">
+      <el-table-column prop="similar" align="center" label="相似" min-width="80">
          <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>1</p>
@@ -68,7 +69,7 @@
       </template>
       </el-table-column>
     </el-table>
-    <el-pagination :page-size="20" background :pager-count="11" layout="prev, pager, next" :total="200"></el-pagination>
+    <el-pagination :page-size="20" background :pager-count="11" layout="prev, pager, next" :total="20"></el-pagination>
   </div>
 </template>
 <style type="text/css" lang="scss">
@@ -79,14 +80,19 @@
   div {
     &.title {
       height: 60px;
-      border-bottom: 1px solid #999;
       h2 {
         text-align: left;
       }
     }
   }
+   .el-table {
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+    thead tr th{
+      background-color: #f8f8f8;
+    }
+  }
   .el-form {
-    border-bottom: 1px solid #999;
     margin-top: 15px;
     text-align: left;
     .el-input {
@@ -98,18 +104,26 @@
     .el-form-item {
       width: 305px;
       &:nth-last-child(2) {
-        width: 390px;
+        // width: 390px;
+        margin-right: 25px;
       }
     }
   }
   .el-form--inline .el-form-item {
     margin-right: 0;
   }
+  .el-pagination{
+    margin-top: 20px;
+  }
 }
 </style>
 
 <script>
+import searchFrom from "../../components/searchFrom/searchFrom";
 export default {
+   components: {
+    searchFrom
+  },
   data() {
     return {
       Ideas: {
@@ -121,6 +135,150 @@ export default {
         time: "2019.10.9",
         boolean: []
       },
+       formConfig: {
+        formItemList: [
+           {
+            type: "select",
+            prop: "state",
+            label: "产品类型:",
+            placeholder: "请选择产品类型",
+            optList: [
+              {
+                label: "寿险",
+                value: "寿险"
+              },
+              {
+                label: "年金",
+                value: "年金"
+              }, {
+                label: "医疗",
+                value: "医疗"
+              },
+              {
+                label: "意外",
+                value: "意外"
+              }, {
+                label: "疾病",
+                value: "疾病"
+              },
+              {
+                label: "其它",
+                value: "其它"
+              }
+            ]
+          },
+          {
+            type: "input",
+            prop: "lightspot",
+            label: "产品亮点:",
+            placeholder: "请输入产品亮点"
+          },
+          {
+            type: "select",
+            prop: "designType",
+            label: "提出部门:",
+            placeholder: "请选择提出部门",
+            optList: [
+              {
+                label: "精算部1",
+                value: "精算部1"
+              },
+              {
+                label: "精算部2",
+                value: "精算部2"
+              },
+              {
+                label: "精算部3",
+                value: "精算部3"
+              },
+              {
+                label: "精算部4",
+                value: "精算部4"
+              },
+              {
+                label: "精算部5",
+                value: "精算部5"
+              },
+              {
+                label: "精算部6",
+                value: "精算部6"
+              }
+            ]
+          },
+         
+          {
+            type: "select",
+            prop: "state",
+            label: "审核状态:",
+            placeholder: "请选择审核状态",
+            optList: [
+              {
+                label: "已审核",
+                value: "已审核"
+              },
+              {
+                label: "未审核",
+                value: "未审核"
+              }
+            ]
+          },
+          {
+            type: "input",
+            prop: "demandName",
+            label: "创意名称:",
+            placeholder: "请输入创意名称"
+          },
+          {
+            type: "select",
+            prop: "introducer",
+            label: "提出人:",
+            placeholder: "请选择提出人",
+            optList: [
+              {
+                label: "小红",
+                value: "小红"
+              },
+              {
+                label: "小丽",
+                value: "小丽"
+              },
+              {
+                label: "小东",
+                value: "小东"
+              },
+              {
+                label: "小杰",
+                value: "小杰"
+              },
+              {
+                label: "小明",
+                value: "小明"
+              },
+              {
+                label: "小东",
+                value: "小东"
+              }
+            ]
+          },
+          {
+            type: "date",
+            prop: "submitTime",
+            label: "提交时间",
+            dateFormate: "2019-10-15"
+          }
+        ],
+        operate: [
+          {
+            type: "primary",
+            name: "搜索",
+            handleClick: this.search
+          }
+        ],
+
+        labelWidth: "100"
+      },
+       value: {},
+      block: true,
       tableData: [
         {
           type: "寿金",
@@ -148,15 +306,18 @@ export default {
     };
   },
   methods: {
-    onSubmit(Ideas) {
-      console.log(Ideas);
-    },
+    // onSubmit(Ideas) {
+    //   console.log(Ideas);
+    // },
     handleCheckedCitiesChange(...arg) {
       console.log(arg);
     },
     select(selection,row){
         console.log(selection,row)
-    }
+    },
+     search() {
+      console.log(this.value);
+    },
   }
 };
 </script>

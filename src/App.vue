@@ -11,7 +11,7 @@
 }
 html {
   height: 100%; //让html的高度等于屏幕
-  background: #f0f0f2;
+  // background: #f0f0f2;
 }
 body {
   height: 100%;

@@ -49,45 +49,47 @@
             <el-input v-model="form.insuranceAgeEnd"></el-input>
           </el-form-item>
           <el-form-item label="缴费方式">
-            <el-select v-model="form.premPeriodType" placeholder="请选择缴费方式">
+           
+            <el-select v-model="form.premPeriodType" multiple placeholder="请选择缴费方式">
               <el-option label="年交" value="年交"></el-option>
               <el-option label="季交" value="季交"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="缴费方式" class="insurance">
-            <el-radio-group v-model="form.premPeriod">
-              <p>
-                <el-radio label="按年龄"></el-radio>
-                <el-input v-model="form.age"></el-input>
+          <el-form-item label="缴费期间" class="insurance">
+            <el-radio-group v-model="payment">
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="payment=='按年龄'">
+                <el-input v-model="form.premPeriod"></el-input>
+
                 <span>岁</span>
                 <el-checkbox v-model="form.checked">终身</el-checkbox>
               </p>
+              <el-radio label="按年份"></el-radio>
               <p>
-                <el-radio label="按年份"></el-radio>
                 <el-input v-model="form.year"></el-input>
                 <span>年</span>
               </p>
+              <el-radio label="其他"></el-radio>
               <p>
-                <el-radio label="其他"></el-radio>
                 <el-input v-model="form.other"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="保险期间" class="insurance">
             <el-radio-group v-model="form.resource">
+              <el-radio label="按年龄"></el-radio>
               <p>
-                <el-radio label="按年龄"></el-radio>
                 <el-input v-model="form.age"></el-input>
                 <span>岁</span>
                 <el-checkbox v-model="form.checked">终身</el-checkbox>
               </p>
+              <el-radio label="按年份"></el-radio>
               <p>
-                <el-radio label="按年份"></el-radio>
                 <el-input v-model="form.year"></el-input>
                 <span>年</span>
               </p>
+              <el-radio label="其他"></el-radio>
               <p>
-                <el-radio label="其他"></el-radio>
                 <el-input v-model="form.other"></el-input>
               </p>
             </el-radio-group>
@@ -149,7 +151,7 @@
           <el-form-item label="备注" label-width="180px">
             <el-input v-model="form.rateNote" placeholder="请输入"></el-input>
           </el-form-item>
-        <el-form-item label="新业务价值类别" label-width="180px">
+          <el-form-item label="新业务价值类别" label-width="180px">
             <el-select v-model="form.newBusinessClass" placeholder="请选择业务">
               <el-option label="AAAAA" value="AAAAA"></el-option>
               <el-option label="AAAA" value="AAAA"></el-option>
@@ -159,7 +161,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="新业务价值系数" label-width="180px">
-            <el-select v-model="form.newBusinessFactor" placeholder="请选择价值系数" :disabled='valueD'>
+            <el-select v-model="form.newBusinessFactor" placeholder="请选择价值系数" :disabled="valueD">
               <el-option label="140%" value="140"></el-option>
               <el-option label="120%" value="120"></el-option>
               <el-option label="100%" value="10"></el-option>
@@ -540,12 +542,12 @@
               <div class="left">
                 <span>分红方式</span>
               </div>
-               <div class="right line">
+              <div class="right line">
                 <el-select v-model="form.value" placeholder="请选择">
                   <el-option label="现金分红" value="现金分红"></el-option>
                   <el-option label="保额分红" value="保额分红"></el-option>
                 </el-select>
-                 <el-select v-model="form.value" placeholder="请选择">
+                <el-select v-model="form.value" placeholder="请选择">
                   <el-option label="现金领取" value="现金领取"></el-option>
                   <el-option label="累积生息" value="累积生息"></el-option>
                 </el-select>
@@ -573,6 +575,10 @@
     font-size: 23px;
     background-color: #fff;
   }
+  /deep/.el-radio {
+    position: relative;
+    top: 12px;
+  }
   p.minTitle {
     padding-left: 28px;
     font-size: 13px;
@@ -591,7 +597,7 @@
     margin-top: 15px;
     border-radius: 4px;
     padding-left: 20px;
-      background-color: #f8f8f8;
+    background-color: #f8f8f8;
   }
   /deep/ .el-collapse-item__wrap {
     border-radius: 4px;
@@ -624,7 +630,7 @@
         color: #333;
         font-size: 12px;
         padding-top: 14px;
-        margin-left: -13px;
+        margin-left: -6px;
       }
     }
   }
@@ -690,7 +696,7 @@
       }
     }
   }
-  /deep/  .el-select{
+  /deep/ .el-select {
     margin-right: 20px;
   }
   // /deep/ .el-upload {
@@ -704,12 +710,14 @@
 export default {
   data() {
     return {
+      payment: "",
+      period: "",
       form: {
         productType: "寿险"
       },
-      activeNames: ['1','2','3','4',"5"],
+      activeNames: ["1", "2", "3", "4", "5"],
       length: ["1"],
-       options: [
+      options: [
         {
           value: "保单周",
           label: "保单周"
@@ -729,8 +737,8 @@ export default {
           label: "年交保费"
         }
       ],
-      disable:false,
-        valueD: false
+      disable: false,
+      valueD: false
     };
   },
   computed: {
@@ -738,39 +746,38 @@ export default {
       let { params } = this.$route;
       return params;
     },
-     designType: function() {
+    designType: function() {
       return this.form.proDesignType;
     },
     // productType:function(){
 
     // },
-     valueType:function(){
+    valueType: function() {
       return this.form.newBusinessClass;
     }
   },
-   watch: {
-    valueType(val){
-       this.valueD=true;
-     if(val==="AAAAA"){
-       this.form.newBusinessFactor='140%';
-     }else if(val==="AAAA"){
-        this.form.newBusinessFactor='120%';
-     }else if(val==="AAA"){
-        this.form.newBusinessFactor='100%';
-     }else if(val==="AA"){
-        this.form.newBusinessFactor='80%';
-     }else if(val==="A"){
-        this.form.newBusinessFactor='55%';
-     }
-    
-    },
-     designType(val) {
-      if (val === "万能型" || val === "投资连结型") {
-        this.form.masterOrAppend = "0";
-        this.disable=true;
-        this.form.premPeriod='其它';
+  watch: {
+    valueType(val) {
+      this.valueD = true;
+      if (val === "AAAAA") {
+        this.form.newBusinessFactor = "140%";
+      } else if (val === "AAAA") {
+        this.form.newBusinessFactor = "120%";
+      } else if (val === "AAA") {
+        this.form.newBusinessFactor = "100%";
+      } else if (val === "AA") {
+        this.form.newBusinessFactor = "80%";
+      } else if (val === "A") {
+        this.form.newBusinessFactor = "55%";
       }
     },
+    designType(val) {
+      if (val === "万能型" || val === "投资连结型") {
+        this.form.masterOrAppend = "0";
+        this.disable = true;
+        this.form.premPeriod = "其它";
+      }
+    }
   },
   methods: {
     handleChange(val) {

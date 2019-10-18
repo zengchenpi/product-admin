@@ -15,7 +15,7 @@
           <el-menu-item index="1">
             <router-link to="/creative/center" tag="p">
               <i class="el-icon-menu"></i>
-              <span >创意中心</span>
+              <span>创意中心</span>
             </router-link>
             <!-- <router-link to='/creative/center' slot="title" tag='span'>创意中心</router-link> -->
           </el-menu-item>
@@ -25,38 +25,53 @@
               <span>生产中心</span>
             </template>
             <el-menu-item-group>
-              <router-link tag='div' to='/demand/allDemand'>
+              <router-link tag="div" to="/demand/allDemand">
                 <el-menu-item index="2-1">所有需求</el-menu-item>
               </router-link>
             </el-menu-item-group>
             <el-menu-item-group>
-              <router-link  to="/demand/allProduct" tag="p">
-              <el-menu-item index="2-2">所有产品</el-menu-item>
+              <router-link to="/demand/allProduct" tag="p">
+                <el-menu-item index="2-2">所有产品</el-menu-item>
               </router-link>
             </el-menu-item-group>
             <el-menu-item-group>
               <el-menu-item index="2-3">短险搭配</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="3">
-            <i class="el-icon-menu"></i>
-            <span slot="title">推广中心</span>
-          </el-menu-item>
-          <el-menu-item index="4">
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>推广中心</span>
+            </template>
+            <el-menu-item-group>
+              <router-link tag="div" to="/demand/allDemand">
+                <el-menu-item index="3-1">产品库</el-menu-item>
+              </router-link>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <router-link to="/demand/allProduct" tag="p">
+                <el-menu-item index="3-2">监管规则库</el-menu-item>
+              </router-link>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="3-3">同业产品库</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <!-- <el-menu-item index="4">
             <i class="el-icon-menu"></i>
             <span slot="title">监管规则中心</span>
-          </el-menu-item>
-          <el-menu-item index="5">
+          </el-menu-item> -->
+          <el-menu-item index="4">
             <i class="el-icon-menu"></i>
             <span slot="title">我的待办</span>
           </el-menu-item>
-          <el-menu-item index="6">
+          <el-menu-item index="5">
             <i class="el-icon-menu"></i>
             <span slot="title">我的已办</span>
           </el-menu-item>
         </el-menu>
       </el-col>
-      <el-col :span="21" class="infinite-list"  style="background-color:#fff,overflow:auto">
+      <el-col :span="21" class="infinite-list" style="background-color:#fff,overflow:auto">
         <div class="header">
           <h1></h1>
           <span class="title">标准化产品开发平台</span>
@@ -85,14 +100,15 @@
       height: 100%;
     }
   }
-  /deep/ .el-col-21{
-       overflow-x:auto;
-       height: 100%;
+  /deep/ .el-col-21 {
+    overflow-x: auto;
+    height: 100%;
   }
   /deep/ .el-submenu,
   .el-menu-item {
     text-align: left;
   }
+  
   div.header {
     display: flex;
     height: 52px;
@@ -136,11 +152,10 @@
 }
 </style>
 <script>
-import Login from './user/Login'
+import Login from "./user/Login";
 export default {
-   components: {
-    Login,
-   
+  components: {
+    Login
   },
   methods: {
     handleOpen(key, keyPath) {
@@ -149,9 +164,9 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
-    exit(){
-      let username='';
-    this.$store.commit('updateUsername',username)
+    exit() {
+      let username = "";
+      this.$store.commit("updateUsername", username);
     }
   }
 };
