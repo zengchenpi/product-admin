@@ -1,23 +1,23 @@
 <template>
   <div class="page-allProduct">
     <searchFrom :formConfig="formConfig" :value="value" :block="block"></searchFrom>
-    <el-table :data="tableData" style="width: 100%" max-height="550" @select="select">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column fixed label="ID" type="index" min-width="80px"></el-table-column>
-      <el-table-column prop="productType" label="产品类型" min-width="80px"></el-table-column>
-      <el-table-column prop="productName" label="产品名称" min-width="80px"></el-table-column>
-      <el-table-column prop="insuranceType" label="保险期间类型" min-width="80px"></el-table-column>
-      <el-table-column prop="sales" label="销售渠道" min-width="90px"></el-table-column>
-      <el-table-column prop="time" label="提出时间" min-width="90px"></el-table-column>
-      <el-table-column prop="introducer" label="提出人" min-width="90px"></el-table-column>
-      <el-table-column label="操作" min-width="80px">
+    <el-table :data="tableData" header-align="center" border style="width: 100%" max-height="550" @select="select">
+      <el-table-column align="center"  type="selection" width="55"></el-table-column>
+      <el-table-column align="center" fixed label="ID" type="index" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="productType" label="产品类型" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="productName" label="产品名称" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="insuranceType" label="保险期间类型" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="sales" label="销售渠道" min-width="90px"></el-table-column>
+      <el-table-column align="center" prop="time" label="提出时间" min-width="90px"></el-table-column>
+      <el-table-column align="center" prop="introducer" label="提出人" min-width="90px"></el-table-column>
+      <el-table-column align="center" label="操作" min-width="80px">
          <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleDetail(scope.row)">详情</el-button>
         </template>
         <!-- <el-button size="mini" type="primary" @click="handleDetail()">详情</el-button> -->
       </el-table-column>
     </el-table>
-    <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+    <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -242,6 +242,11 @@ export default {
       ]
     };
   },
+   computed: {
+     total:function(){
+       return this.tableData.length;
+     },
+   },
   methods: {
     search() {
       console.log(this.value);

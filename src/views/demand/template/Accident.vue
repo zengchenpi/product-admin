@@ -376,7 +376,6 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-
       <el-form-item class="btn">
         <el-button type="primary" @click="onSubmit">保存</el-button>
         <el-button>返回</el-button>
@@ -413,6 +412,7 @@
     margin-top: 15px;
     border-radius: 4px;
     padding-left: 20px;
+    background-color: #f8f8f8;
   }
   /deep/ .el-collapse-item__wrap {
     border-radius: 4px;

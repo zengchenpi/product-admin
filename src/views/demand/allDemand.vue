@@ -56,27 +56,27 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-table :data="tableData" style="width: 100%" @select="select">
+    <el-table :data="tableData"  border style="width: 100%" @select="select">
       <!-- <el-table-column type="selection" width="55"></el-table-column> -->
       <!-- <el-table-column fixed label="ID" type="index" min-width="80px"></el-table-column> -->
       <el-table-column prop="type" label="需求名称" min-width="100px"></el-table-column>
       <el-table-column prop="name" label="提出部门" min-width="80px"></el-table-column>
       <el-table-column prop="province" label="产品亮点" min-width="80px"></el-table-column>
-      <el-table-column prop="time" label="提出时间" min-width="90px"></el-table-column>
-      <el-table-column prop="introducer" label="提出人" min-width="90px"></el-table-column>
-      <el-table-column prop="state" label="状态" min-width="90px"></el-table-column>
-      <el-table-column label="操作" min-width="80px">
+      <el-table-column align="center" prop="time" label="提出时间" min-width="90px"></el-table-column>
+      <el-table-column align="center" prop="introducer" label="提出人" min-width="90px"></el-table-column>
+      <el-table-column align="center" prop="state" label="状态" min-width="90px"></el-table-column>
+      <el-table-column align="center" label="操作" min-width="80px">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleDetail(scope.row)">需求详情</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
-      :page-size="20"
+      :page-size="4"
       background
       :pager-count="11"
       layout="prev, pager, next"
-      :total="200"
+      :total="total"
     ></el-pagination>
   </div>
 </template>
@@ -97,9 +97,11 @@
     margin-left: 30px;
   }
   /deep/ .el-table {
-    padding-top: 10px;
     border-top: 1px solid #ddd;
     margin-top: 10px;
+    thead tr th{
+      background-color: #f8f8f8;
+    }
   }
   .el-form--inline .el-form-item {
     margin-right: 0;
@@ -313,9 +315,38 @@ export default {
           similar: 3,
           boolean: true,
           state: "未提交"
+        },
+         {
+          type: "其它",
+          name: "小虎",
+          province: "上海",
+          time: "2019-10-15",
+          perfect: "85",
+          introducer: "小蓝",
+          public: "需求详情",
+          similar: 3,
+          boolean: true,
+          state: "未提交"
+        },
+         {
+          type: "医疗",
+          name: "小虎",
+          province: "上海",
+          time: "2019-10-15",
+          perfect: "85",
+          introducer: "小蓝",
+          public: "需求详情",
+          similar: 3,
+          boolean: true,
+          state: "未提交"
         }
       ]
     };
+  },
+   computed: {
+     total:function(){
+       return this.tableData.length;
+     }
   },
   methods: {
     search() {

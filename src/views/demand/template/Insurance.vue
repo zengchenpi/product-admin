@@ -24,7 +24,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="主附险">
-            <el-select v-model="form.masterOrAppend" placeholder="请选择主附险">
+            <el-select v-model="form.masterOrAppend" placeholder="请选择主附险" :disabled="disable">
               <el-option label="主险" value="0"></el-option>
               <el-option label="附险" value="1"></el-option>
             </el-select>
@@ -591,6 +591,7 @@
     margin-top: 15px;
     border-radius: 4px;
     padding-left: 20px;
+      background-color: #f8f8f8;
   }
   /deep/ .el-collapse-item__wrap {
     border-radius: 4px;
@@ -728,6 +729,7 @@ export default {
           label: "年交保费"
         }
       ],
+      disable:false,
         valueD: false
     };
   },
@@ -736,6 +738,12 @@ export default {
       let { params } = this.$route;
       return params;
     },
+     designType: function() {
+      return this.form.proDesignType;
+    },
+    // productType:function(){
+
+    // },
      valueType:function(){
       return this.form.newBusinessClass;
     }
@@ -755,7 +763,14 @@ export default {
         this.form.newBusinessFactor='55%';
      }
     
-    }
+    },
+     designType(val) {
+      if (val === "万能型" || val === "投资连结型") {
+        this.form.masterOrAppend = "0";
+        this.disable=true;
+        this.form.premPeriod='其它';
+      }
+    },
   },
   methods: {
     handleChange(val) {

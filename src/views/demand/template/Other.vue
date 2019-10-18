@@ -308,6 +308,7 @@
     margin-top: 15px;
     border-radius: 4px;
     padding-left: 20px;
+    background-color: #f8f8f8;
   }
   /deep/ .el-collapse-item__wrap {
     border-radius: 4px;
