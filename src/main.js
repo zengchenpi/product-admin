@@ -13,7 +13,7 @@ Vue.config.productionTip = false
 // 安装UI
 Vue.use(ElementUI);
 // 安装axios
-Vue.prototype.$http = axios;
+Vue.prototype.axios = axios;
 new Vue({
   router,
   store,

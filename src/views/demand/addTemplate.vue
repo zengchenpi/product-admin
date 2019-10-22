@@ -1,6 +1,6 @@
 <template>
   <div class="page-template">
-      <Medical v-if="type=='医疗'"></Medical>
+    <Medical v-if="type=='医疗'"></Medical>
     <YearGold v-else-if="type=='年金'"></YearGold>
     <Other v-else-if="type=='其它'"></Other>
     <Accident v-else-if="type=='意外'"></Accident>

@@ -60,7 +60,7 @@
           <!-- <el-menu-item index="4">
             <i class="el-icon-menu"></i>
             <span slot="title">监管规则中心</span>
-          </el-menu-item> -->
+          </el-menu-item>-->
           <el-menu-item index="4">
             <i class="el-icon-menu"></i>
             <span slot="title">我的待办</span>
@@ -82,7 +82,9 @@
             <a @click="exit">退出</a>
           </div>
         </div>
-        <router-view />
+        <transition name="fade">
+          <router-view></router-view>
+        </transition>
       </el-col>
     </el-row>
   </div>
@@ -108,16 +110,21 @@
   .el-menu-item {
     text-align: left;
   }
-  
+/deep/ .el-submenu .el-menu-item{
+  min-width: 0;
+}
   div.header {
     display: flex;
     height: 52px;
     position: relative;
-    border-bottom: 1px solid #dddddd;
+    background-color: #fff;
+    // border-bottom: 1px solid #dddddd;
+        background-color: rgb(48, 65, 86);
+        color: #fff;
     h1 {
-      background: url("/imgs/logo.png") no-repeat;
+      // background: url("/imgs/logo.png") no-repeat;
       width: 398px;
-      height: 50px;
+      height: 52px;
       background-size: contain;
     }
     span.title {
@@ -148,6 +155,14 @@
         text-decoration: none;
       }
     }
+  }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.08s;
+  }
+  .fade-enter,
+  .fade-leave-active {
+    opacity: 0;
   }
 }
 </style>

@@ -13,6 +13,7 @@
       :key="index"
       :label="item.label"
       :prop="item.prop"
+      :span="4"
     >
       <el-input
         v-if="item.type=='input'"

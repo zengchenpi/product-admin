@@ -5,13 +5,13 @@
 </template>
 
 <style lang="scss">
-*{
+* {
   margin: 0;
   padding: 0;
 }
 html {
   height: 100%; //让html的高度等于屏幕
-  // background: #f0f0f2;
+  background-color: #ddd;
 }
 body {
   height: 100%;

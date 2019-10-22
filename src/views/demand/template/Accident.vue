@@ -54,40 +54,40 @@
               <el-option label="季交" value="季交"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="缴费方式" class="insurance">
-            <el-radio-group v-model="form.premPeriod">
-              <p>
-                <el-radio label="按年龄"></el-radio>
+         <el-form-item label="缴费期间" class="insurance">
+            <el-radio-group v-model="payment">
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="payment=='按年龄'">
                 <el-input v-model="form.premPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.checked">终身</el-checkbox>
+                <el-checkbox v-model="form.premPeriod" label="终身"></el-checkbox>
               </p>
-              <p>
-                <el-radio label="按年份"></el-radio>
-                <el-input v-model="form.premPeriod"></el-input>
+              <el-radio label="按年份"></el-radio>
+              <p v-show="payment=='按年份'">
+                <el-input v-model="form.year"></el-input>
                 <span>年</span>
               </p>
-              <p>
-                <el-radio label="其他"></el-radio>
-                <el-input v-model="form.premPeriod"></el-input>
+              <el-radio label="其它"></el-radio>
+              <p v-show="payment=='其它'">
+                <el-input v-model="form.other"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="保险期间" class="insurance">
+          <el-form-item style="display:block" label="保险期间" class="insurance">
             <el-radio-group v-model="form.resource">
-              <p>
-                <el-radio label="按年龄"></el-radio>
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="form.resource=='按年龄'">
                 <el-input v-model="form.age"></el-input>
                 <span>岁</span>
                 <el-checkbox v-model="form.checked">终身</el-checkbox>
               </p>
-              <p>
-                <el-radio label="按年份"></el-radio>
+              <el-radio label="按年份"></el-radio>
+              <p v-show="form.resource=='按年份'">
                 <el-input v-model="form.year"></el-input>
                 <span>年</span>
               </p>
-              <p>
-                <el-radio label="其他"></el-radio>
+              <el-radio label="其它"></el-radio>
+              <p v-show="form.resource=='其它'">
                 <el-input v-model="form.other"></el-input>
               </p>
             </el-radio-group>
@@ -494,7 +494,6 @@
       margin-left: 90px;
       line-height: 40px;
       text-align: center;
-
       p {
         margin-bottom: 10px;
         & > div {
