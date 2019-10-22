@@ -193,9 +193,10 @@
             <el-upload
                class="upload-demo"
               ref="upload"
-             
+              :file-list="fileList"
               :on-success="handleAvatarSuccess"
               action
+              :on-change="handleChange"
               :auto-upload="false"
             >
               <el-input class="inputText" v-model="form.gm"></el-input>
@@ -1293,6 +1294,7 @@
 export default {
   data() {
     return {
+      fileList:[],
       payment: "",
       period: "",
       form: {
@@ -1442,6 +1444,7 @@ export default {
   },
   watch: {
     valueType(val) {
+    
       this.valueD = true;
       if (val === "AAAAA") {
         this.form.newBusinessFactor = "140%";
@@ -1529,12 +1532,16 @@ export default {
           confirmButtonText: "确定"
         });
       }
+    },
+    fileList(val){
+      console.log(val)
     }
   },
   methods: {
-    handleChange(val) {
-      console.log(val);
-    },
+   
+     handleChange(file, fileList) {
+       console.log(file);
+      },
     onSubmit() {
       console.log(this.form);
     },
