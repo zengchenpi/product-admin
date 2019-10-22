@@ -184,32 +184,14 @@
             </el-upload>
           </el-form-item>
         </el-collapse-item>
-        <el-collapse-item title="运营规则" name="4">
-          <el-form-item label="投该保规则" label-width="180px">
-            <el-upload
-              class="upload-demo"
-              ref="upload"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              action
-              :auto-upload="false"
-            >
-              <el-input class="inputText" v-model="form.gm"></el-input>
-              <el-button
-                class="uploadF"
-                slot="trigger"
-                size="small"
-                type="primary"
-                title="上传文件"
-              >上传文件</el-button>
-            </el-upload>
-          </el-form-item>
+         <el-collapse-item title="运营规则" name="4">
           <el-form-item label="特殊保全需求" label-width="180px">
             <el-upload
               class="upload-demo"
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-change="preservation"
               action
               :auto-upload="false"
             >
@@ -223,12 +205,13 @@
               >上传文件</el-button>
             </el-upload>
           </el-form-item>
-          <el-form-item label="特殊投该保需求" label-width="180px">
+          <el-form-item label="特殊投核保需求" label-width="180px">
             <el-upload
               class="upload-demo"
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-change="special"
               action
               :auto-upload="false"
             >
@@ -243,10 +226,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="其它特殊需求" label-width="180px">
-            <el-input v-model="form.tz" placeholder="请输入特殊需求"></el-input>
-          </el-form-item>
-          <el-form-item label="保全规则" label-width="180px">
-            <el-input v-model="form.gz" placeholder="请输入规则"></el-input>
+            <el-input v-model="form.otherSpecialRequied" placeholder="请输入特殊需求"></el-input>
           </el-form-item>
         </el-collapse-item>
         <el-collapse-item title="保险责任" name="5">
@@ -442,6 +422,28 @@ export default {
     }
   },
   methods: {
+    special(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.file.specialInsuranceReq.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.file.specialInsuranceReq.fileName = file.name;
+    },
+    preservation(file){
+       let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.specialInsuranceReq.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.specialInsuranceReq.fileName = file.name;
+    },
     handleChange(val) {
       console.log(val);
     },

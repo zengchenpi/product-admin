@@ -24,7 +24,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="主附险">
-            <el-select v-model="form.masterOrAppend" placeholder="请选择主附险"  :disabled='disable'>
+            <el-select v-model="form.masterOrAppend" placeholder="请选择主附险" :disabled="disable">
               <el-option label="主险" value="0"></el-option>
               <el-option label="附险" value="1"></el-option>
             </el-select>
@@ -54,40 +54,40 @@
               <el-option label="季交" value="季交"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="缴费方式" class="insurance">
-            <el-radio-group v-model="form.premPeriod">
-              <p>
-                <el-radio label="按年龄"></el-radio>
-                <el-input v-model="form.age"></el-input>
+          <el-form-item label="缴费期间" class="insurance">
+            <el-radio-group v-model="payment" :disabled="disable3">
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="payment=='按年龄'">
+                <el-input v-model="form.premPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.checked">终身</el-checkbox>
+                <el-checkbox v-model="form.premPeriod" label="终身"></el-checkbox>
               </p>
-              <p>
-                <el-radio label="按年份"></el-radio>
+              <el-radio label="按年份"></el-radio>
+              <p v-show="payment=='按年份'">
                 <el-input v-model="form.year"></el-input>
                 <span>年</span>
               </p>
-              <p>
-                <el-radio label="其它"></el-radio>
+              <el-radio label="其它" title="请在右方输入"></el-radio>
+              <p v-show="payment=='其它'">
                 <el-input v-model="form.other"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="保险期间" class="insurance">
+          <el-form-item style="display:block" label="保险期间" class="insurance">
             <el-radio-group v-model="form.resource">
-              <p>
-                <el-radio label="按年龄"></el-radio>
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="form.resource=='按年龄'">
                 <el-input v-model="form.age"></el-input>
                 <span>岁</span>
                 <el-checkbox v-model="form.checked">终身</el-checkbox>
               </p>
-              <p>
-                <el-radio label="按年份"></el-radio>
+              <el-radio label="按年份"></el-radio>
+              <p v-show="form.resource=='按年份'">
                 <el-input v-model="form.year"></el-input>
                 <span>年</span>
               </p>
-              <p>
-                <el-radio label="其它"></el-radio>
+              <el-radio label="其它"></el-radio>
+              <p v-show="form.resource=='其它'">
                 <el-input v-model="form.other"></el-input>
               </p>
             </el-radio-group>
@@ -149,7 +149,7 @@
           <el-form-item label="备注" label-width="180px">
             <el-input v-model="form.rateNote" placeholder="请输入"></el-input>
           </el-form-item>
-         <el-form-item label="新业务价值类别" label-width="180px">
+          <el-form-item label="新业务价值类别" label-width="180px">
             <el-select v-model="form.newBusinessClass" placeholder="请选择业务">
               <el-option label="AAAAA" value="AAAAA"></el-option>
               <el-option label="AAAA" value="AAAA"></el-option>
@@ -159,7 +159,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="新业务价值系数" label-width="180px">
-            <el-select v-model="form.newBusinessFactor" placeholder="请选择价值系数" :disabled='valueD'>
+            <el-select v-model="form.newBusinessFactor" placeholder="请选择价值系数" :disabled="valueD">
               <el-option label="140%" value="140"></el-option>
               <el-option label="120%" value="120"></el-option>
               <el-option label="100%" value="10"></el-option>
@@ -188,31 +188,13 @@
           </el-form-item>
         </el-collapse-item>
         <el-collapse-item title="运营规则" name="4">
-          <el-form-item label="投该保规则" label-width="180px">
-            <el-upload
-              class="upload-demo"
-              ref="upload"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              action
-              :auto-upload="false"
-            >
-              <el-input class="inputText" v-model="form.gm"></el-input>
-              <el-button
-                class="uploadF"
-                slot="trigger"
-                size="small"
-                type="primary"
-                title="上传文件"
-              >上传文件</el-button>
-            </el-upload>
-          </el-form-item>
           <el-form-item label="特殊保全需求" label-width="180px">
             <el-upload
               class="upload-demo"
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-change="preservation"
               action
               :auto-upload="false"
             >
@@ -226,12 +208,13 @@
               >上传文件</el-button>
             </el-upload>
           </el-form-item>
-          <el-form-item label="特殊投该保需求" label-width="180px">
+          <el-form-item label="特殊投核保需求" label-width="180px">
             <el-upload
               class="upload-demo"
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-change="special"
               action
               :auto-upload="false"
             >
@@ -246,267 +229,521 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="其它特殊需求" label-width="180px">
-            <el-input v-model="form.tz" placeholder="请输入特殊需求"></el-input>
-          </el-form-item>
-          <el-form-item label="保全规则" label-width="180px">
-            <el-input v-model="form.gz" placeholder="请输入规则"></el-input>
+            <el-input v-model="form.otherSpecialRequied" placeholder="请输入特殊需求"></el-input>
           </el-form-item>
         </el-collapse-item>
         <el-collapse-item title="保险责任" name="5">
           <div class="item">
             <div class="left">
-              <span>生存金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>生存金</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[0].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
             <div class="right">
-              <p v-for="(item,index) in length" :key="index">
-                <span>第</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <span>至</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-                <span>付给</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options1"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </p>
-              <el-button
-                type="primary"
-                icon="el-icon-plus"
-                plain
-                @click="addtemplate"
-                title="点击添加生存金模板"
-              ></el-button>
+              <el-row :gutter="7">
+                <el-col :span="1">
+                  <span>第</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[0].periodStart"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="1">
+                  <span>至</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[0].periodEnd"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="3">
+                  <el-select
+                    v-model="form.responsbilities[0].responsibilityPeriodType"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <span>付给</span>
+                </el-col>
+                <el-col :span="3">
+                  <el-input
+                    v-model="form.responsbilities[0].payMoneyRatio"
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
+                </el-col>
+                <el-col :span="4">
+                  <el-select v-model="form.responsbilities[0].payType" placeholder="请选择">
+                    <el-option
+                      v-for="item in options1"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
           </div>
           <div class="item">
             <div class="left">
-              <span>满险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>满险金</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[1].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
             <div class="right">
-              <p>
-                <span>第</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <span>至</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-                <span>付给</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options1"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </p>
+              <el-row :gutter="7">
+                <el-col :span="1">
+                  <span>第</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[1].periodStart"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="1">
+                  <span>至</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[1].periodEnd"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="3">
+                  <el-select
+                    v-model="form.responsbilities[1].responsibilityPeriodType"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <span>付给</span>
+                </el-col>
+                <el-col :span="3">
+                  <el-input
+                    v-model="form.responsbilities[1].payMoneyRatio"
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
+                </el-col>
+                <el-col :span="4">
+                  <el-select v-model="form.responsbilities[1].payType" placeholder="请选择">
+                    <el-option
+                      v-for="item in options1"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
           </div>
           <div class="item">
             <div class="left">
-              <span>身故保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>身故保险金</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[2].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
             <div class="right">
-              <p>
-                <span>第</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <span>至</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-                <span>付给</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options1"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </p>
+              <el-row :gutter="7">
+                <el-col :span="1">
+                  <span>第</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[2].periodStart"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="1">
+                  <span>至</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[2].periodEnd"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="3">
+                  <el-select
+                    v-model="form.responsbilities[2].responsibilityPeriodType"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <span>付给</span>
+                </el-col>
+                <el-col :span="3">
+                  <el-input
+                    v-model="form.responsbilities[2].payMoneyRatio"
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
+                </el-col>
+                <el-col :span="4">
+                  <el-select v-model="form.responsbilities[2].payType" placeholder="请选择">
+                    <el-option
+                      v-for="item in options1"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
           </div>
           <div class="item">
             <div class="left">
-              <span>全残保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>全残保险金</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[3].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
             <div class="right">
-              <p>
-                <span>第</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <span>至</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-                <span>付给</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options1"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </p>
+              <el-row :gutter="7">
+                <el-col :span="1">
+                  <span>第</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[3].periodStart"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="1">
+                  <span>至</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[3].periodEnd"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="3">
+                  <el-select
+                    v-model="form.responsbilities[3].responsibilityPeriodType"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <span>付给</span>
+                </el-col>
+                <el-col :span="3">
+                  <el-input
+                    v-model="form.responsbilities[3].payMoneyRatio"
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
+                </el-col>
+                <el-col :span="4">
+                  <el-select v-model="form.responsbilities[3].payType" placeholder="请选择">
+                    <el-option
+                      v-for="item in options1"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
           </div>
           <div class="item">
             <div class="left">
-              <span>其它</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>其它</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[4].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
             <div class="right">
-              <p>
-                <span>第</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <span>至</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-                <span>付给</span>
-                <el-input v-model="form.survival " placeholder="请输入内容"></el-input>
-                <el-select v-model="form.value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options1"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </p>
+              <el-row :gutter="7">
+                <el-col :span="1">
+                  <span>第</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[4].periodStart"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="1">
+                  <span>至</span>
+                </el-col>
+                <el-col :span="5">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="form.responsbilities[4].periodEnd"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="3">
+                  <el-select
+                    v-model="form.responsbilities[4].responsibilityPeriodType"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <span>付给</span>
+                </el-col>
+                <el-col :span="3">
+                  <el-input
+                    v-model="form.responsbilities[4].payMoneyRatio"
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
+                </el-col>
+                <el-col :span="4">
+                  <el-select v-model="form.responsbilities[4].payType" placeholder="请选择">
+                    <el-option
+                      v-for="item in options1"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
           </div>
           <div class="item">
             <div class="left">
-              <span>初始费用</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>初始费用</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[5].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>退保费用</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>风险保险费</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
+            <div class="right">
+              <el-row :gutter="7">
+                <el-col :span="20">
+                  <el-input
+                    v-model="form.responsbilities[5].responsibilityDescribe"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </el-col>
+              </el-row>
             </div>
           </div>
           <div class="item">
             <div class="left">
-              <span>持续奖金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>退保费用</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[6].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
+            <div class="right">
+              <el-row :gutter="7">
+                <el-col :span="20">
+                  <el-input
+                    v-model="form.responsbilities[6].responsibilityDescribe"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </el-col>
+              </el-row>
             </div>
           </div>
           <div class="item">
             <div class="left">
-              <span>最低保证利率</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>风险保险费</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[7].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
+            <div class="right">
+              <el-row :gutter="7">
+                <el-col :span="20">
+                  <el-input
+                    v-model="form.responsbilities[7].responsibilityDescribe"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </el-col>
+              </el-row>
             </div>
           </div>
           <div class="item">
             <div class="left">
-              <span>期望结算利率</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="9">
+                  <span>持续奖金</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[8].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
+            <div class="right">
+              <el-row :gutter="7">
+                <el-col :span="20">
+                  <el-input
+                    v-model="form.responsbilities[8].responsibilityDescribe"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </el-col>
+              </el-row>
             </div>
           </div>
+          <div class="item">
+            <div class="left">
+              <el-row>
+                <el-col :span="9">
+                  <span>最低保证利率</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[9].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
+            </div>
+            <div class="right">
+              <el-row :gutter="7">
+                <el-col :span="20">
+                  <el-input
+                    v-model="form.responsbilities[9].responsibilityDescribe"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <el-row>
+                <el-col :span="9">
+                  <span>期望结算利率</span>
+                </el-col>
+                <el-col :span="15">
+                  <el-select v-model="form.responsbilities[10].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
+            </div>
+            <div class="right">
+              <el-row :gutter="7">
+                <el-col :span="20">
+                  <el-input
+                    v-model="form.responsbilities[10].responsibilityDescribe"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+          
         </el-collapse-item>
       </el-collapse>
 
@@ -521,6 +758,9 @@
 <style lang="scss" scoped>
 .page-template {
   background-color: #ddd;
+  /deep/ .el-date-editor.el-input{
+    width: 100%;
+  }
   h3 {
     height: 50px;
     line-height: 50px;
@@ -536,10 +776,18 @@
     padding-bottom: 10px;
   }
   /deep/.el-input__inner {
-    width: 250px;
+    width: 100%;
+    font-size: 13px;
+  }
+   /deep/.el-radio {
+    position: relative;
+    top: 12px;
   }
   /deep/ .el-form {
     padding: 10px 30px;
+    .el-form-item .el-form-item__content{
+      width: 215px;
+    }
   }
   /deep/ .el-collapse-item__header {
     border: 1px solid #bbb;
@@ -579,7 +827,7 @@
         color: #333;
         font-size: 12px;
         padding-top: 14px;
-        margin-left: -13px;
+        margin-left: 0px;
       }
     }
   }
@@ -600,19 +848,16 @@
   div.item {
     overflow: hidden;
     margin-bottom: 10px;
-    /deep/ .el-input__inner {
-      width: 142px;
-    }
-
     div.left {
       float: left;
       display: flex;
       line-height: 40px;
       margin-left: 20px;
-      max-width: 250px;
+      width:19%;
+      margin-right:10px;
       span {
         display: inline-block;
-        width: 90px;
+        width: 100px;
       }
     }
     div.right {
@@ -620,18 +865,8 @@
       margin-left: 90px;
       line-height: 40px;
       text-align: center;
-      p {
-        margin-bottom: 10px;
-        & > div {
-          display: inline-block;
-          width: 150px;
-          margin-left: 10px;
-          margin-right: 10px;
-        }
-      }
-      p > span {
-        width: 80px;
-      }
+      width:69%;
+   
       .el-button {
         width: 200px;
         margin-top: 10px;
@@ -654,8 +889,115 @@ export default {
     return {
       form: {
         productType: "年金",
-        proDesignType:'',
+        proDesignType: "",
+        responsbilities: [
+          {
+            includeDetail: "生存金",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: ""
+          },
+          {
+            includeDetail: "满险金",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: ""
+          },
+          {
+            includeDetail: "身故保险金",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: ""
+          },
+          {
+            includeDetail: "全残保险金",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: ""
+          },
+          {
+            includeDetail: "其它",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: ""
+          },
+          {
+            includeDetail: "初始费用",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: "",
+            bonusGetMethod: "",
+            bonusType: ""
+          },
+          {
+            includeDetail: "退保费用",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: ""
+          },
+          {
+            includeDetail: "风险保险费",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: ""
+          },
+          {
+            includeDetail: "持续奖金",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "最低保证利率",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "期望结算利率",
+            ifInclude: "",
+            responsibilityPeriodType: "",
+            periodStart: "",
+            periodEnd: "",
+            payType: "",
+            payMoneyRatio: "",
+            responsibilityDescribe: ""
+          }
+        ]
       },
+
       activeNames: ["1", "2", "3", "4", "5"],
       options: [
         {
@@ -678,8 +1020,10 @@ export default {
         }
       ],
       length: ["1"],
-      disable:false,
-      valueD:false
+      disable: false,
+       disable3: false,
+       payment: "",
+      valueD: false
     };
   },
   computed: {
@@ -690,7 +1034,7 @@ export default {
     designType: function() {
       return this.form.proDesignType;
     },
-    valueType:function(){
+    valueType: function() {
       return this.form.newBusinessClass;
     }
   },
@@ -698,27 +1042,48 @@ export default {
     designType(val) {
       if (val === "万能型" || val === "投资连结型") {
         this.form.masterOrAppend = "0";
-        this.disable=true;
-        this.form.premPeriod='其它';
+        this.disable = true;
+        this.form.premPeriod = "其它";
       }
     },
-    valueType(val){
-       this.valueD=true;
-     if(val==="AAAAA"){
-       this.form.newBusinessFactor='140%';
-     }else if(val==="AAAA"){
-        this.form.newBusinessFactor='120%';
-     }else if(val==="AAA"){
-        this.form.newBusinessFactor='100%';
-     }else if(val==="AA"){
-        this.form.newBusinessFactor='80%';
-     }else if(val==="A"){
-        this.form.newBusinessFactor='55%';
-     }
-    
+    valueType(val) {
+      this.valueD = true;
+      if (val === "AAAAA") {
+        this.form.newBusinessFactor = "140%";
+      } else if (val === "AAAA") {
+        this.form.newBusinessFactor = "120%";
+      } else if (val === "AAA") {
+        this.form.newBusinessFactor = "100%";
+      } else if (val === "AA") {
+        this.form.newBusinessFactor = "80%";
+      } else if (val === "A") {
+        this.form.newBusinessFactor = "55%";
+      }
     }
   },
   methods: {
+    special(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.file.specialInsuranceReq.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.file.specialInsuranceReq.fileName = file.name;
+    },
+    preservation(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.specialInsuranceReq.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.specialInsuranceReq.fileName = file.name;
+    },
     handleChange(val) {
       console.log(val);
     },

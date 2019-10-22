@@ -108,6 +108,7 @@
               type="date"
               placeholder="选择日期"
               v-model="form.expectOnlineDate"
+              value-format="yyyy-MM-dd"
               style="width: 100%;"
             ></el-date-picker>
           </el-form-item>
@@ -189,33 +190,14 @@
           </el-form-item>
         </el-collapse-item>
         <el-collapse-item title="运营规则" name="4">
-          <el-form-item label="投该保规则" label-width="180px">
-            <el-upload
-               class="upload-demo"
-              ref="upload"
-              :file-list="fileList"
-              :on-success="handleAvatarSuccess"
-              action
-              :on-change="handleChange"
-              :auto-upload="false"
-            >
-              <el-input class="inputText" v-model="form.gm"></el-input>
-              <el-button
-                class="uploadF"
-                slot="trigger"
-                size="small"
-                type="primary"
-                title="上传文件"
-              >上传文件</el-button>
-            </el-upload>
-          </el-form-item>
           <el-form-item label="特殊保全需求" label-width="180px">
             <el-upload
               class="upload-demo"
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
-              action
+              :on-change="preservation"
+               action
               :auto-upload="false"
             >
               <el-input class="inputText" v-model="form.gm"></el-input>
@@ -228,12 +210,13 @@
               >上传文件</el-button>
             </el-upload>
           </el-form-item>
-          <el-form-item label="特殊投该保需求" label-width="180px">
+          <el-form-item label="特殊投核保需求" label-width="180px">
             <el-upload
               class="upload-demo"
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-change="special"
               action
               :auto-upload="false"
             >
@@ -248,11 +231,9 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="其它特殊需求" label-width="180px">
-            <el-input v-model="form.tz" placeholder="请输入特殊需求"></el-input>
+            <el-input v-model="form.otherSpecialRequied" placeholder="请输入特殊需求"></el-input>
           </el-form-item>
-          <el-form-item label="保全规则" label-width="180px">
-            <el-input v-model="form.gz" placeholder="请输入规则"></el-input>
-          </el-form-item>
+         
         </el-collapse-item>
         <el-collapse-item title="保险责任" name="5">
           <div class="item" v-if="productType==='两全保险'">
@@ -310,7 +291,11 @@
                   <span>付给</span>
                 </el-col>
                 <el-col :span="3">
-                  <el-input v-model="form.responsbilities[0].payMoneyRatio" type="number" placeholder="请输入"></el-input>
+                  <el-input
+                    v-model="form.responsbilities[0].payMoneyRatio"
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
                 </el-col>
                 <el-col :span="4">
                   <el-select v-model="form.responsbilities[0].payType" placeholder="请选择">
@@ -378,7 +363,11 @@
                   <span>付给</span>
                 </el-col>
                 <el-col :span="3">
-                  <el-input v-model="form.responsbilities[1].payMoneyRatio" type="number" placeholder="请输入"></el-input>
+                  <el-input
+                    v-model="form.responsbilities[1].payMoneyRatio"
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
                 </el-col>
                 <el-col :span="4">
                   <el-select v-model="form.responsbilities[1].payType" placeholder="请选择">
@@ -446,7 +435,11 @@
                   <span>付给</span>
                 </el-col>
                 <el-col :span="3">
-                  <el-input v-model="form.responsbilities[2].payMoneyRatio" type="number"  placeholder="请输入"></el-input>
+                  <el-input
+                    v-model="form.responsbilities[2].payMoneyRatio"
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
                 </el-col>
                 <el-col :span="4">
                   <el-select v-model="form.responsbilities[2].payType" placeholder="请选择">
@@ -514,7 +507,11 @@
                   <span>付给</span>
                 </el-col>
                 <el-col :span="3">
-                  <el-input v-model="form.responsbilities[3].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                  <el-input
+                    v-model="form.responsbilities[3].payMoneyRatio "
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
                 </el-col>
                 <el-col :span="4">
                   <el-select v-model="form.responsbilities[3].payType" placeholder="请选择">
@@ -582,7 +579,11 @@
                   <span>付给</span>
                 </el-col>
                 <el-col :span="3">
-                  <el-input v-model="form.responsbilities[4].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                  <el-input
+                    v-model="form.responsbilities[4].payMoneyRatio "
+                    type="number"
+                    placeholder="请输入"
+                  ></el-input>
                 </el-col>
                 <el-col :span="4">
                   <el-select v-model="form.responsbilities[4].payType" placeholder="请选择">
@@ -651,7 +652,11 @@
                     <span>付给</span>
                   </el-col>
                   <el-col :span="3">
-                    <el-input v-model="form.responsbilities[5].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                    <el-input
+                      v-model="form.responsbilities[5].payMoneyRatio "
+                      type="number"
+                      placeholder="请输入"
+                    ></el-input>
                   </el-col>
                   <el-col :span="4">
                     <el-select v-model="form.responsbilities[5].payType" placeholder="请选择">
@@ -719,7 +724,11 @@
                     <span>付给</span>
                   </el-col>
                   <el-col :span="3">
-                    <el-input v-model="form.responsbilities[6].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                    <el-input
+                      v-model="form.responsbilities[6].payMoneyRatio "
+                      type="number"
+                      placeholder="请输入"
+                    ></el-input>
                   </el-col>
                   <el-col :span="4">
                     <el-select v-model="form.responsbilities[6].payType" placeholder="请选择">
@@ -787,7 +796,11 @@
                     <span>付给</span>
                   </el-col>
                   <el-col :span="3">
-                    <el-input v-model="form.responsbilities[7].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                    <el-input
+                      v-model="form.responsbilities[7].payMoneyRatio "
+                      type="number"
+                      placeholder="请输入"
+                    ></el-input>
                   </el-col>
                   <el-col :span="4">
                     <el-select v-model="form.responsbilities[7].payType" placeholder="请选择">
@@ -855,7 +868,11 @@
                     <span>付给</span>
                   </el-col>
                   <el-col :span="3">
-                    <el-input v-model="form.responsbilities[8].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                    <el-input
+                      v-model="form.responsbilities[8].payMoneyRatio "
+                      type="number"
+                      placeholder="请输入"
+                    ></el-input>
                   </el-col>
                   <el-col :span="4">
                     <el-select v-model="form.responsbilities[8].payType" placeholder="请选择">
@@ -925,7 +942,11 @@
                     <span>付给</span>
                   </el-col>
                   <el-col :span="3">
-                    <el-input v-model="form.responsbilities[5].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                    <el-input
+                      v-model="form.responsbilities[5].payMoneyRatio "
+                      type="number"
+                      placeholder="请输入"
+                    ></el-input>
                   </el-col>
                   <el-col :span="4">
                     <el-select v-model="form.responsbilities[5].payType" placeholder="请选择">
@@ -993,7 +1014,11 @@
                     <span>付给</span>
                   </el-col>
                   <el-col :span="3">
-                    <el-input v-model="form.responsbilities[6].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                    <el-input
+                      v-model="form.responsbilities[6].payMoneyRatio "
+                      type="number"
+                      placeholder="请输入"
+                    ></el-input>
                   </el-col>
                   <el-col :span="4">
                     <el-select v-model="form.responsbilities[6].payType" placeholder="请选择">
@@ -1061,7 +1086,11 @@
                     <span>付给</span>
                   </el-col>
                   <el-col :span="3">
-                    <el-input v-model="form.responsbilities[7].payMoneyRatio " type="number" placeholder="请输入"></el-input>
+                    <el-input
+                      v-model="form.responsbilities[7].payMoneyRatio "
+                      type="number"
+                      placeholder="请输入"
+                    ></el-input>
                   </el-col>
                   <el-col :span="4">
                     <el-select v-model="form.responsbilities[7].payType" placeholder="请选择">
@@ -1294,7 +1323,7 @@
 export default {
   data() {
     return {
-      fileList:[],
+      fileList: [],
       payment: "",
       period: "",
       form: {
@@ -1385,7 +1414,11 @@ export default {
             responsibilityDescribe: ""
           }
         ],
-        insuranceType: ""
+        file: {},
+        insuranceType: "",
+        tradeResearch: { fileName: "", content: "", filePath: "" },
+        specialAssureRequie: { fileName: "", content: "", filePath: "" },
+        specialInsuranceReq:{ fileName: "", content: "", filePath: "" },
       },
       activeNames: ["1", "2", "3", "4", "5"],
       length: ["1"],
@@ -1444,7 +1477,6 @@ export default {
   },
   watch: {
     valueType(val) {
-    
       this.valueD = true;
       if (val === "AAAAA") {
         this.form.newBusinessFactor = "140%";
@@ -1517,31 +1549,47 @@ export default {
       if (end - start < 5) {
         this.$alert("生存金起领年需大于第五年", "友情提示", {
           confirmButtonText: "确定"
-          // callback: action => {
-          //   this.$message({
-          //     type: 'info',
-          //     message: `action: ${ action }`
-          //   });
-          // }
+         
         });
       }
     },
     goldPayType(val) {
-      if (val === "2" && this.form.responsbilities[0].payMoneyRatio>20) {
-           this.$alert("给付比例需小于20%", "友情提示", {
+      if (val === "2" && this.form.responsbilities[0].payMoneyRatio > 20) {
+        this.$alert("给付比例需小于20%", "友情提示", {
           confirmButtonText: "确定"
         });
       }
     },
-    fileList(val){
-      console.log(val)
+    fileList(val) {
+      console.log(val);
     }
   },
   methods: {
-   
-     handleChange(file, fileList) {
-       console.log(file);
-      },
+    special(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.file.specialInsuranceReq.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.file.specialInsuranceReq.fileName = file.name;
+    },
+    preservation(file){
+       let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.specialInsuranceReq.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.specialInsuranceReq.fileName = file.name;
+    },
+    handleChange(){
+
+    },
     onSubmit() {
       console.log(this.form);
     },
@@ -1560,8 +1608,7 @@ export default {
     },
     addtemplate() {
       this.length.push("1");
-    },
-    
+    }
   }
 };
 </script>

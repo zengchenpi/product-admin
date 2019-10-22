@@ -54,7 +54,7 @@
               <el-option label="季交" value="季交"></el-option>
             </el-select>
           </el-form-item>
-         <el-form-item label="缴费期间" class="insurance">
+          <el-form-item label="缴费期间" class="insurance">
             <el-radio-group v-model="payment">
               <el-radio label="按年龄"></el-radio>
               <p v-show="payment=='按年龄'">
@@ -188,31 +188,13 @@
           </el-form-item>
         </el-collapse-item>
         <el-collapse-item title="运营规则" name="4">
-          <el-form-item label="投该保规则" label-width="180px">
-            <el-upload
-              class="upload-demo"
-              ref="upload"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              action
-              :auto-upload="false"
-            >
-              <el-input class="inputText" v-model="form.gm"></el-input>
-              <el-button
-                class="uploadF"
-                slot="trigger"
-                size="small"
-                type="primary"
-                title="上传文件"
-              >上传文件</el-button>
-            </el-upload>
-          </el-form-item>
           <el-form-item label="特殊保全需求" label-width="180px">
             <el-upload
               class="upload-demo"
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-change="preservation"
               action
               :auto-upload="false"
             >
@@ -226,12 +208,13 @@
               >上传文件</el-button>
             </el-upload>
           </el-form-item>
-          <el-form-item label="特殊投该保需求" label-width="180px">
+          <el-form-item label="特殊投核保需求" label-width="180px">
             <el-upload
               class="upload-demo"
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-change="special"
               action
               :auto-upload="false"
             >
@@ -246,10 +229,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="其它特殊需求" label-width="180px">
-            <el-input v-model="form.tz" placeholder="请输入特殊需求"></el-input>
-          </el-form-item>
-          <el-form-item label="保全规则" label-width="180px">
-            <el-input v-model="form.gz" placeholder="请输入规则"></el-input>
+            <el-input v-model="form.otherSpecialRequied" placeholder="请输入特殊需求"></el-input>
           </el-form-item>
         </el-collapse-item>
         <el-collapse-item title="保险责任" name="5">
@@ -541,28 +521,49 @@ export default {
       let { params } = this.$route;
       return params;
     },
-     valueType:function(){
+    valueType: function() {
       return this.form.newBusinessClass;
     }
   },
-   watch: {
-    valueType(val){
-       this.valueD=true;
-     if(val==="AAAAA"){
-       this.form.newBusinessFactor='140%';
-     }else if(val==="AAAA"){
-        this.form.newBusinessFactor='120%';
-     }else if(val==="AAA"){
-        this.form.newBusinessFactor='100%';
-     }else if(val==="AA"){
-        this.form.newBusinessFactor='80%';
-     }else if(val==="A"){
-        this.form.newBusinessFactor='55%';
-     }
-    
+  watch: {
+    valueType(val) {
+      this.valueD = true;
+      if (val === "AAAAA") {
+        this.form.newBusinessFactor = "140%";
+      } else if (val === "AAAA") {
+        this.form.newBusinessFactor = "120%";
+      } else if (val === "AAA") {
+        this.form.newBusinessFactor = "100%";
+      } else if (val === "AA") {
+        this.form.newBusinessFactor = "80%";
+      } else if (val === "A") {
+        this.form.newBusinessFactor = "55%";
+      }
     }
   },
   methods: {
+    special(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.file.specialInsuranceReq.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.file.specialInsuranceReq.fileName = file.name;
+    },
+    preservation(file){
+       let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.specialInsuranceReq.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.specialInsuranceReq.fileName = file.name;
+    },
     handleChange(val) {
       console.log(val);
     },
