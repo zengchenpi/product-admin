@@ -2,11 +2,11 @@
   <div class="page-allProduct">
     <searchFrom :formConfig="formConfig" :value="value" :block="block"></searchFrom>
     <el-table :data="tableData" header-align="center" border style="width: 100%" max-height="550" @select="select">
-      <el-table-column align="center"  type="selection" width="55"></el-table-column>
+      <el-table-column align="center" type="selection" width="55"></el-table-column>
       <el-table-column align="center" fixed label="ID" type="index" min-width="80px"></el-table-column>
       <el-table-column align="center" prop="productType" label="产品类型" min-width="80px"></el-table-column>
       <el-table-column align="center" prop="productName" label="产品名称" min-width="80px"></el-table-column>
-      <el-table-column align="center" prop="insuranceType" label="保险期间类型" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="insuranceTermType" label="保险期间类型" min-width="80px"></el-table-column>
       <el-table-column align="center" prop="sales" label="销售渠道" min-width="90px"></el-table-column>
       <el-table-column align="center" prop="time" label="提出时间" min-width="90px"></el-table-column>
       <el-table-column align="center" prop="introducer" label="提出人" min-width="90px"></el-table-column>
@@ -136,12 +136,6 @@ export default {
             ]
           },
           {
-            type: "input",
-            prop: "lightspot",
-            label: "产品亮点:",
-            placeholder: "请输入产品亮点"
-          },
-          {
             type: "select",
             prop: "introducer",
             label: "提出人:",
@@ -196,7 +190,7 @@ export default {
         {
           productType: "寿险",
           productName: "教育无忧",
-          insuranceType: "长期",
+          insuranceTermType: "长期",
           sales: "银保",
           time: "2019-10-16",
           introducer: "张三"
@@ -204,7 +198,7 @@ export default {
         {
           productType: "医疗",
           productName: "保障全面",
-          insuranceType: "短期",
+          insuranceTermType: "短期",
           sales: "中介",
           time: "2019-10-16",
           introducer: "李四"
@@ -212,7 +206,7 @@ export default {
         {
           productType: "其它",
           productName: "教育无忧",
-          insuranceType: "长期",
+          insuranceTermType: "长期",
           sales: "银保",
           time: "2019-10-16",
           introducer: "张三"
@@ -220,7 +214,7 @@ export default {
         {
           productType: "年金",
           productName: "保障全面",
-          insuranceType: "短期",
+          insuranceTermType: "短期",
           sales: "中介",
           time: "2019-10-16",
           introducer: "李四"
@@ -228,7 +222,7 @@ export default {
         {
           productType: "疾病",
           productName: "教育无忧",
-          insuranceType: "长期",
+          insuranceTermType: "长期",
           sales: "银保",
           time: "2019-10-16",
           introducer: "张三"
@@ -236,7 +230,7 @@ export default {
         {
           productType: "意外",
           productName: "保障全面",
-          insuranceType: "短期",
+          insuranceTermType: "短期",
           sales: "中介",
           time: "2019-10-16",
           introducer: "李四"

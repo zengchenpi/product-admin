@@ -4,10 +4,11 @@
     <el-row class="tac">
       <el-col :span="3">
         <el-menu
-          default-active="2"
+          :default-active="defaultActive"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose"
+          @select="handleSelect"
           background-color="#304156"
           text-color="#fff"
           active-text-color="#ffd04b"
@@ -110,17 +111,17 @@
   .el-menu-item {
     text-align: left;
   }
-/deep/ .el-submenu .el-menu-item{
-  min-width: 0;
-}
+  /deep/ .el-submenu .el-menu-item {
+    min-width: 0;
+  }
   div.header {
     display: flex;
     height: 52px;
     position: relative;
     background-color: #fff;
     // border-bottom: 1px solid #dddddd;
-        background-color: rgb(48, 65, 86);
-        color: #fff;
+    background-color: rgb(48, 65, 86);
+    color: #fff;
     h1 {
       // background: url("/imgs/logo.png") no-repeat;
       width: 398px;
@@ -172,12 +173,23 @@ export default {
   components: {
     Login
   },
+  computed: {
+    defaultActive: function() {
+      if (sessionStorage.getItem("active") == null) {
+        return "2-1";
+      }
+      return sessionStorage.getItem("active");
+    }
+  },
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+    handleClose(key,keyPath) {
+      console.log(key,keyPath);
+    },
+    handleSelect(key) {
+      sessionStorage.setItem("active", key);
     },
     exit() {
       let username = "";

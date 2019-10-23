@@ -3,16 +3,15 @@
     <h3>需求中心</h3>
     <p class="minTitle">年金</p>
     <el-form ref="form" :model="form" label-width="100px" :inline="true">
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="activeNames">
         <el-collapse-item title="产品要素" name="1">
           <el-form-item label="产品大类">
             <el-input v-model="form.productType" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="产品类型">
             <el-select v-model="form.productSubType" placeholder="请选择主产品类型">
-              <el-option label="定期寿险" value="定期寿险"></el-option>
-              <el-option label="终身寿险" value="终身寿险"></el-option>
-              <el-option label="两全保险" value="两全保险"></el-option>
+              <el-option label="非养老年金保险" value="非养老年金保险"></el-option>
+              <el-option label="养老年金保险" value="养老年金保险"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="设计类型">
@@ -49,46 +48,46 @@
             <el-input v-model="form.insuranceAgeEnd"></el-input>
           </el-form-item>
           <el-form-item label="缴费方式">
-            <el-select v-model="form.premPeriodType" placeholder="请选择缴费方式">
+            <el-select v-model="form.premFrequency" multiple placeholder="请选择缴费方式">
               <el-option label="年交" value="年交"></el-option>
               <el-option label="季交" value="季交"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="缴费期间" class="insurance">
-            <el-radio-group v-model="payment" :disabled="disable3">
+            <el-radio-group v-model="form.premPeriodType" :disabled="disable3">
               <el-radio label="按年龄"></el-radio>
-              <p v-show="payment=='按年龄'">
+              <p v-show="form.premPeriodType=='按年龄'">
                 <el-input v-model="form.premPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.premPeriod" label="终身"></el-checkbox>
+                <!-- <el-checkbox v-model="form.premPeriod" label="终身"></el-checkbox> -->
               </p>
               <el-radio label="按年份"></el-radio>
-              <p v-show="payment=='按年份'">
-                <el-input v-model="form.year"></el-input>
+              <p v-show="form.premPeriodType=='按年份'">
+                <el-input v-model="form.premPeriod"></el-input>
                 <span>年</span>
               </p>
               <el-radio label="其它" title="请在右方输入"></el-radio>
-              <p v-show="payment=='其它'">
-                <el-input v-model="form.other"></el-input>
+              <p v-show="form.premPeriodType=='其它'">
+                <el-input v-model="form.premPeriod"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
           <el-form-item style="display:block" label="保险期间" class="insurance">
-            <el-radio-group v-model="form.resource">
+            <el-radio-group v-model="form.coverPeriodType">
               <el-radio label="按年龄"></el-radio>
-              <p v-show="form.resource=='按年龄'">
-                <el-input v-model="form.age"></el-input>
+              <p v-show="form.coverPeriodType=='按年龄'">
+                <el-input v-model="form.coverPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.checked">终身</el-checkbox>
+                <!-- <el-checkbox v-model="form.checked">终身</el-checkbox> -->
               </p>
               <el-radio label="按年份"></el-radio>
-              <p v-show="form.resource=='按年份'">
-                <el-input v-model="form.year"></el-input>
+              <p v-show="form.coverPeriodType=='按年份'">
+                <el-input v-model="form.coverPeriod"></el-input>
                 <span>年</span>
               </p>
               <el-radio label="其它"></el-radio>
-              <p v-show="form.resource=='其它'">
-                <el-input v-model="form.other"></el-input>
+              <p v-show="form.coverPeriodType=='其它'">
+                <el-input v-model="form.coverPeriod"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
@@ -128,6 +127,7 @@
               ref="upload"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-change="handleChange"
               action
               :auto-upload="false"
             >
@@ -216,6 +216,7 @@
               :on-remove="handleRemove"
               :on-change="special"
               action
+              :limit="1"
               :auto-upload="false"
             >
               <el-input class="inputText" v-model="form.gm"></el-input>
@@ -224,7 +225,7 @@
                 slot="trigger"
                 size="small"
                 type="primary"
-                title="上传费率计算文件"
+                title="只能上传一个文件"
               >上传文件</el-button>
             </el-upload>
           </el-form-item>
@@ -247,7 +248,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[0].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="1">
                   <span>第</span>
@@ -319,7 +320,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[1].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="1">
                   <span>第</span>
@@ -391,7 +392,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[2].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="1">
                   <span>第</span>
@@ -463,7 +464,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[3].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="1">
                   <span>第</span>
@@ -535,7 +536,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[4].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="1">
                   <span>第</span>
@@ -607,7 +608,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[5].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="20">
                   <el-input
@@ -632,7 +633,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[6].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="20">
                   <el-input
@@ -657,7 +658,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[7].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="20">
                   <el-input
@@ -682,7 +683,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[8].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="20">
                   <el-input
@@ -707,7 +708,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[9].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="20">
                   <el-input
@@ -732,7 +733,7 @@
                 </el-col>
               </el-row>
             </div>
-            <div class="right">
+            <div class="right" v-show="form.responsbilities[10].ifInclude!='0'">
               <el-row :gutter="7">
                 <el-col :span="20">
                   <el-input
@@ -743,13 +744,12 @@
               </el-row>
             </div>
           </div>
-          
         </el-collapse-item>
       </el-collapse>
 
       <el-form-item class="btn">
         <el-button type="primary" @click="onSubmit">保存</el-button>
-        <el-button>返回</el-button>
+        <el-button @click="back">返回</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -758,7 +758,7 @@
 <style lang="scss" scoped>
 .page-template {
   background-color: #ddd;
-  /deep/ .el-date-editor.el-input{
+  /deep/ .el-date-editor.el-input {
     width: 100%;
   }
   h3 {
@@ -779,13 +779,13 @@
     width: 100%;
     font-size: 13px;
   }
-   /deep/.el-radio {
+  /deep/.el-radio {
     position: relative;
     top: 12px;
   }
   /deep/ .el-form {
     padding: 10px 30px;
-    .el-form-item .el-form-item__content{
+    .el-form-item .el-form-item__content {
       width: 215px;
     }
   }
@@ -853,8 +853,8 @@
       display: flex;
       line-height: 40px;
       margin-left: 20px;
-      width:19%;
-      margin-right:10px;
+      width: 19%;
+      margin-right: 10px;
       span {
         display: inline-block;
         width: 100px;
@@ -865,8 +865,8 @@
       margin-left: 90px;
       line-height: 40px;
       text-align: center;
-      width:69%;
-   
+      width: 69%;
+
       .el-button {
         width: 200px;
         margin-top: 10px;
@@ -995,34 +995,41 @@ export default {
             payMoneyRatio: "",
             responsibilityDescribe: ""
           }
-        ]
+        ],
+        tradeResearch: { fileName: "", content: "", filePath: "" },
+        specialAssureRequie: { fileName: "", content: "", filePath: "" },
+        specialInsuranceReq: { fileName: "", content: "", filePath: "" }
       },
 
       activeNames: ["1", "2", "3", "4", "5"],
       options: [
         {
-          value: "保单周",
-          label: "保单周"
+          value: "0",
+          label: "保单周单日"
         },
         {
-          value: "单日",
-          label: "单日"
+          value: "1",
+          label: "周岁"
         }
       ],
       options1: [
         {
-          value: "基本保额",
+          value: "0",
           label: "基本保额"
         },
         {
-          value: "年交保费",
+          value: "1",
           label: "年交保费"
+        },
+        {
+          value: "2",
+          label: "已交保费"
         }
       ],
       length: ["1"],
       disable: false,
-       disable3: false,
-       payment: "",
+      disable3: false,
+      payment: "",
       valueD: false
     };
   },
@@ -1036,6 +1043,9 @@ export default {
     },
     valueType: function() {
       return this.form.newBusinessClass;
+    },
+    goldPayType: function() {
+      return this.form.responsbilities[0].payType;
     }
   },
   watch: {
@@ -1043,7 +1053,8 @@ export default {
       if (val === "万能型" || val === "投资连结型") {
         this.form.masterOrAppend = "0";
         this.disable = true;
-        this.form.premPeriod = "其它";
+        this.form.premPeriodType = "其它";
+        this.payment = "其它";
       }
     },
     valueType(val) {
@@ -1059,6 +1070,13 @@ export default {
       } else if (val === "A") {
         this.form.newBusinessFactor = "55%";
       }
+    },
+    goldPayType(val) {
+      if (val === "2" && this.form.responsbilities[0].payMoneyRatio > 20) {
+        this.$alert("给付比例需小于20%", "友情提示", {
+          confirmButtonText: "确定"
+        });
+      }
     }
   },
   methods: {
@@ -1068,10 +1086,10 @@ export default {
         let _base64 = reader.result;
         console.log(_base64);
         let BASE64 = _base64.split(",");
-        this.form.file.specialInsuranceReq.content = BASE64[1];
+        this.form.specialInsuranceReq.content = BASE64[1];
       };
       reader.readAsDataURL(file.raw);
-      this.file.specialInsuranceReq.fileName = file.name;
+      this.form.specialInsuranceReq.fileName = file.name;
     },
     preservation(file) {
       let reader = new FileReader();
@@ -1079,15 +1097,31 @@ export default {
         let _base64 = reader.result;
         console.log(_base64);
         let BASE64 = _base64.split(",");
-        this.form.specialInsuranceReq.content = BASE64[1];
+        this.form.specialAssureRequie.content = BASE64[1];
       };
       reader.readAsDataURL(file.raw);
-      this.specialInsuranceReq.fileName = file.name;
+      this.form.specialAssureRequie.fileName = file.name;
     },
-    handleChange(val) {
-      console.log(val);
+    handleChange(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.tradeResearch.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.form.tradeResearch.fileName = file.name;
     },
-    onSubmit() {},
+    onSubmit() {
+      var myDate = new Date();
+      this.form.date =myDate.toLocaleDateString();
+      this.form.introducer=this.$store.state.username;
+      this.$store.commit("updateData", this.form);
+    },
+    back() {
+      console.log(this.$store.state.data);
+    },
     submitUpload() {},
     handleRemove(file, fileList) {
       console.log(file, fileList);

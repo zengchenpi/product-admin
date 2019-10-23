@@ -3,7 +3,7 @@
     <h3>需求中心</h3>
     <p class="minTitle">寿险</p>
     <el-form ref="form" :model="form" label-width="100px" :inline="true">
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="activeNames">
         <el-collapse-item title="产品要素" name="1">
           <el-form-item label="产品大类">
             <el-input v-model="form.productType" :disabled="true"></el-input>
@@ -55,40 +55,40 @@
             </el-select>
           </el-form-item>
           <el-form-item label="缴费期间" class="insurance">
-            <el-radio-group v-model="payment" :disabled="disable3">
+            <el-radio-group v-model="form.premPeriodType" :disabled="disable3">
               <el-radio label="按年龄"></el-radio>
-              <p v-show="payment=='按年龄'">
+              <p v-show="form.premPeriodType=='按年龄'">
                 <el-input v-model="form.premPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.premPeriod" label="终身"></el-checkbox>
+                <!-- <el-checkbox v-model="form.premPeriod" label="终身"></el-checkbox> -->
               </p>
               <el-radio label="按年份"></el-radio>
-              <p v-show="payment=='按年份'">
-                <el-input v-model="form.year"></el-input>
+              <p v-show="form.premPeriodType=='按年份'">
+                <el-input v-model="form.premPeriod"></el-input>
                 <span>年</span>
               </p>
               <el-radio label="其它" title="请在右方输入"></el-radio>
-              <p v-show="payment=='其它'">
-                <el-input v-model="form.other"></el-input>
+              <p v-show="form.premPeriodType=='其它'">
+                <el-input v-model="form.premPeriod"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
           <el-form-item style="display:block" label="保险期间" class="insurance">
-            <el-radio-group v-model="form.resource">
+            <el-radio-group v-model="form.coverPeriodType">
               <el-radio label="按年龄"></el-radio>
-              <p v-show="form.resource=='按年龄'">
-                <el-input v-model="form.age"></el-input>
+              <p v-show="form.coverPeriodType=='按年龄'">
+                <el-input v-model="form.coverPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.checked">终身</el-checkbox>
+                <!-- <el-checkbox v-model="form.checked">终身</el-checkbox> -->
               </p>
               <el-radio label="按年份"></el-radio>
-              <p v-show="form.resource=='按年份'">
-                <el-input v-model="form.year"></el-input>
+              <p v-show="form.coverPeriodType=='按年份'">
+                <el-input v-model="form.coverPeriod"></el-input>
                 <span>年</span>
               </p>
               <el-radio label="其它"></el-radio>
-              <p v-show="form.resource=='其它'">
-                <el-input v-model="form.other"></el-input>
+              <p v-show="form.coverPeriodType=='其它'">
+                <el-input v-model="form.coverPeriod"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
@@ -197,7 +197,7 @@
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :on-change="preservation"
-               action
+              action
               :auto-upload="false"
             >
               <el-input class="inputText" v-model="form.gm"></el-input>
@@ -233,7 +233,6 @@
           <el-form-item label="其它特殊需求" label-width="180px">
             <el-input v-model="form.otherSpecialRequied" placeholder="请输入特殊需求"></el-input>
           </el-form-item>
-         
         </el-collapse-item>
         <el-collapse-item title="保险责任" name="5">
           <div class="item" v-if="productType==='两全保险'">
@@ -1326,6 +1325,7 @@ export default {
       fileList: [],
       payment: "",
       period: "",
+      proDesignType: "",
       form: {
         productType: "寿险",
         responsbilities: [
@@ -1375,15 +1375,13 @@ export default {
             payMoneyRatio: ""
           },
           {
-            includeDetail: "其它",
+            includeDetail: "分红型",
             ifInclude: "",
-            responsibilityPeriodType: "",
+            bonusType: "",
             periodStart: "",
             periodEnd: "",
             payType: "",
-            payMoneyRatio: "",
-            bonusGetMethod: "",
-            bonusType: ""
+            payMoneyRatio: ""
           },
           {
             includeDetail: "其它",
@@ -1414,11 +1412,31 @@ export default {
             responsibilityDescribe: ""
           }
         ],
-        file: {},
-        insuranceType: "",
+       productSubType:'',
+        proDesignType:'',
+        masterOrAppend:'',
+        insuranceType:'',
+        insuranceTermType:'',
+        insuranceAgeBegin:'',
+        insuranceAgeEnd:'',
+        premFrequency:'',
+        premPeriodType:'',
+        coverPeriodType:'',
+        coverPeriod:'',
+        marketSize:'',
+        bussinessConstruction:'',
+        salesStrategy:'',
+        expectOnlineDate:'',
+        premiumScale:'',
+        eachAvgPremiun:'',
         tradeResearch: { fileName: "", content: "", filePath: "" },
         specialAssureRequie: { fileName: "", content: "", filePath: "" },
-        specialInsuranceReq:{ fileName: "", content: "", filePath: "" },
+        specialInsuranceReq: { fileName: "", content: "", filePath: "" },
+        expectRate:'',
+        rateBusinessType:'',
+        rateNote:'',
+        newBusinessFactor:'',
+        otherSpecialRequied:'',
       },
       activeNames: ["1", "2", "3", "4", "5"],
       length: ["1"],
@@ -1510,17 +1528,17 @@ export default {
         this.form.responsbilities[7].includeDetail = "风险费用";
         this.form.responsbilities[8].includeDetail = "持续奖金";
       } else if (val === "分红型") {
-        let obj = {
-          includeDetail: "分红型",
-          ifInclude: "",
-          bonusType: "",
-          periodStart: "",
-          periodEnd: "",
-          payType: "",
-          payMoneyRatio: ""
-        };
-        this.form.responsbilities[5] = obj;
-        this.form.responsbilities.length = 5;
+        // let obj = {
+        // includeDetail: "分红型",
+        // ifInclude: "",
+        // bonusType: "",
+        // periodStart: "",
+        // periodEnd: "",
+        // payType: "",
+        // payMoneyRatio: ""
+        // };
+        this.form.responsbilities[5].includeDetail = "分红型";
+        this.form.responsbilities.length = 6;
         this.disable3 = false;
       } else {
         this.form.responsbilities.length = 5;
@@ -1549,7 +1567,6 @@ export default {
       if (end - start < 5) {
         this.$alert("生存金起领年需大于第五年", "友情提示", {
           confirmButtonText: "确定"
-         
         });
       }
     },
@@ -1565,19 +1582,8 @@ export default {
     }
   },
   methods: {
-    special(file) {
+     special(file) {
       let reader = new FileReader();
-      reader.onload = () => {
-        let _base64 = reader.result;
-        console.log(_base64);
-        let BASE64 = _base64.split(",");
-        this.form.file.specialInsuranceReq.content = BASE64[1];
-      };
-      reader.readAsDataURL(file.raw);
-      this.file.specialInsuranceReq.fileName = file.name;
-    },
-    preservation(file){
-       let reader = new FileReader();
       reader.onload = () => {
         let _base64 = reader.result;
         console.log(_base64);
@@ -1585,10 +1591,29 @@ export default {
         this.form.specialInsuranceReq.content = BASE64[1];
       };
       reader.readAsDataURL(file.raw);
-      this.specialInsuranceReq.fileName = file.name;
+      this.form.specialInsuranceReq.fileName = file.name;
     },
-    handleChange(){
-
+    preservation(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.specialAssureRequie.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.form.specialAssureRequie.fileName = file.name;
+    },
+    handleChange(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.tradeResearch.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.form.tradeResearch.fileName = file.name;
     },
     onSubmit() {
       console.log(this.form);

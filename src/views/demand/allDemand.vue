@@ -19,8 +19,8 @@
     </div>
     <el-table :data="tableData"  border style="width: 100%" @select="select">
      
-      <el-table-column align="center" prop="type" label="需求名称" min-width="100px"></el-table-column>
-      <el-table-column align="center" prop="name" label="提出部门" min-width="80px"></el-table-column>
+      <el-table-column align="center" prop="productType" label="需求名称" min-width="100px"></el-table-column>
+      <el-table-column align="center" prop="productSubType" label="提出部门" min-width="80px"></el-table-column>
       <el-table-column align="center" prop="time" label="提出时间" min-width="90px"></el-table-column>
       <el-table-column align="center" prop="introducer" label="提出人" min-width="90px"></el-table-column>
       <el-table-column align="center" prop="state" label="状态" min-width="90px"></el-table-column>
@@ -240,8 +240,8 @@ export default {
       block: true,
       tableData: [
         {
-          type: "年金",
-          name: "小虎",
+          productType: "年金",
+          productSubType: "小虎",
           province: "上海",
           time: "2019-10-15",
           perfect: "90%",
@@ -252,8 +252,8 @@ export default {
           state: "已提交"
         },
         {
-          type: "寿险",
-          name: "小虎",
+          productType: "寿险",
+          productSubType: "小虎",
           province: "上海",
           time: "2019-10-15",
           perfect: "85",
@@ -264,8 +264,8 @@ export default {
           state: "未提交"
         },
          {
-          type: "其它",
-          name: "小虎",
+          productType: "其它",
+          productSubType: "小虎",
           province: "上海",
           time: "2019-10-15",
           perfect: "85",
@@ -276,8 +276,8 @@ export default {
           state: "未提交"
         },
          {
-          type: "医疗",
-          name: "小虎",
+          productType: "医疗",
+          productSubType: "小虎",
           province: "上海",
           time: "2019-10-15",
           perfect: "85",
@@ -315,7 +315,6 @@ export default {
     },
     handleCommand(value) {
       let detail = value;
-      this.$store.commit("updateType", detail);
       this.$router.push("/add/template/" + detail);
     }
   }

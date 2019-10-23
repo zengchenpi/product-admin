@@ -6,14 +6,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
      username:'小杰',
-     type:'意外'
+     data:[],
   },
   mutations: {
     updateUsername(state,name){
       state.username=name;
     },
-    updateType(state,value){
-      state.type=value;
+    updateData(state,data){
+      state.data.push(data);
     }
   },
   actions: {

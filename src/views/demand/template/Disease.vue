@@ -3,7 +3,7 @@
     <h3>需求中心</h3>
     <p class="minTitle">疾病</p>
     <el-form ref="form" :model="form" label-width="100px" :inline="true">
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="activeNames">
         <el-collapse-item title="产品要素" name="1">
           <el-form-item label="产品大类">
             <el-input v-model="form.productType" :disabled="true"></el-input>
@@ -50,46 +50,46 @@
             <el-input v-model="form.insuranceAgeEnd"></el-input>
           </el-form-item>
           <el-form-item label="缴费方式">
-            <el-select v-model="form.premPeriodType" placeholder="请选择缴费方式">
+            <el-select v-model="form.premFrequency" multiple placeholder="请选择缴费方式">
               <el-option label="年交" value="年交"></el-option>
               <el-option label="季交" value="季交"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="缴费方式" class="insurance">
-            <el-radio-group v-model="form.premPeriod">
-              <p>
-                <el-radio label="按年龄"></el-radio>
-                <el-input v-model="form.age"></el-input>
+          <el-form-item label="缴费期间" class="insurance">
+            <el-radio-group v-model="form.premPeriodType" :disabled="disable3">
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="form.premPeriodType=='按年龄'">
+                <el-input v-model="form.premPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.checked">终身</el-checkbox>
+                <!-- <el-checkbox v-model="form.premPeriod" label="终身"></el-checkbox> -->
               </p>
-              <p>
-                <el-radio label="按年份"></el-radio>
-                <el-input v-model="form.year"></el-input>
+              <el-radio label="按年份"></el-radio>
+              <p v-show="form.premPeriodType=='按年份'">
+                <el-input v-model="form.premPeriod"></el-input>
                 <span>年</span>
               </p>
-              <p>
-                <el-radio label="其他"></el-radio>
-                <el-input v-model="form.other"></el-input>
+              <el-radio label="其它" title="请在右方输入"></el-radio>
+              <p v-show="form.premPeriodType=='其它'">
+                <el-input v-model="form.premPeriod"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="保险期间" class="insurance">
-            <el-radio-group v-model="form.resource">
-              <p>
-                <el-radio label="按年龄"></el-radio>
-                <el-input v-model="form.age"></el-input>
+          <el-form-item style="display:block" label="保险期间" class="insurance">
+            <el-radio-group v-model="form.coverPeriodType">
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="form.coverPeriodType=='按年龄'">
+                <el-input v-model="form.coverPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.checked">终身</el-checkbox>
+                <!-- <el-checkbox v-model="form.checked">终身</el-checkbox> -->
               </p>
-              <p>
-                <el-radio label="按年份"></el-radio>
-                <el-input v-model="form.year"></el-input>
+              <el-radio label="按年份"></el-radio>
+              <p v-show="form.coverPeriodType=='按年份'">
+                <el-input v-model="form.coverPeriod"></el-input>
                 <span>年</span>
               </p>
-              <p>
-                <el-radio label="其他"></el-radio>
-                <el-input v-model="form.other"></el-input>
+              <el-radio label="其它"></el-radio>
+              <p v-show="form.coverPeriodType=='其它'">
+                <el-input v-model="form.coverPeriod"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
@@ -150,7 +150,7 @@
           <el-form-item label="备注" label-width="180px">
             <el-input v-model="form.rateNote" placeholder="请输入"></el-input>
           </el-form-item>
-         <el-form-item label="新业务价值类别" label-width="180px">
+          <el-form-item label="新业务价值类别" label-width="180px">
             <el-select v-model="form.newBusinessClass" placeholder="请选择业务">
               <el-option label="AAAAA" value="AAAAA"></el-option>
               <el-option label="AAAA" value="AAAA"></el-option>
@@ -160,7 +160,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="新业务价值系数" label-width="180px">
-            <el-select v-model="form.newBusinessFactor" placeholder="请选择价值系数" :disabled='valueD'>
+            <el-select v-model="form.newBusinessFactor" placeholder="请选择价值系数" :disabled="valueD">
               <el-option label="140%" value="140"></el-option>
               <el-option label="120%" value="120"></el-option>
               <el-option label="100%" value="10"></el-option>
@@ -217,6 +217,7 @@
               :on-remove="handleRemove"
               :on-change="special"
               action
+              :limit='1'
               :auto-upload="false"
             >
               <el-input class="inputText" v-model="form.gm"></el-input>
@@ -225,7 +226,7 @@
                 slot="trigger"
                 size="small"
                 type="primary"
-                title="上传费率计算文件"
+                title="只能上传一个文件"
               >上传文件</el-button>
             </el-upload>
           </el-form-item>
@@ -234,133 +235,29 @@
           </el-form-item>
         </el-collapse-item>
         <el-collapse-item title="保险责任" name="5">
-          <div class="item">
+          <div class="item" v-for="(item,index) in form.responsbilities" :key="index">
             <div class="left">
-              <span>等待期</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+              <el-row>
+                <el-col :span="11">
+                  <span>{{item.includeDetail}}</span>
+                </el-col>
+                <el-col :span="13">
+                  <el-select v-model="form.responsbilities[index].ifInclude" placeholder="请选择">
+                    <el-option label="含" value="1"></el-option>
+                    <el-option label="不含" value="0"></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>重大疾病保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>轻症疾病保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>中症疾病保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>特定疾病保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-           <div class="item">
-            <div class="left">
-              <span>疾病终末期保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>身故保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>全残保险金</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="item">
-            <div class="left">
-              <span>保费豁免</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-           <div class="item">
-            <div class="left">
-              <span>其它</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
-            </div>
-            <div class="right line">
-              <el-input v-model="form.fy" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-            <div class="item">
-            <div class="left">
-              <span>是否保证续保</span>
-              <el-select v-model="form.value" placeholder="请选择">
-                <el-option label="含" value="含"></el-option>
-                <el-option label="不含" value="不含"></el-option>
-              </el-select>
+            <div class="right" v-if="item.includeDetail !=='是否保证续保'" style="margin-left:4%">
+              <el-row :gutter="7">
+                <el-col :span="20">
+                  <el-input
+                    v-model="form.responsbilities[index].responsibilityDescribe"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </el-col>
+              </el-row>
             </div>
           </div>
         </el-collapse-item>
@@ -390,18 +287,21 @@
     background-color: #fff;
     padding-bottom: 10px;
   }
-  /deep/.el-input__inner {
-    width: 250px;
-  }
+  // /deep/.el-input__inner {
+  //   width: 250px;
+  // }
   /deep/ .el-form {
     padding: 10px 30px;
+    .el-form-item__content {
+      width: 217px;
+    }
   }
   /deep/ .el-collapse-item__header {
     border: 1px solid #bbb;
     margin-top: 15px;
     border-radius: 4px;
     padding-left: 20px;
-      background-color: #f8f8f8;
+    background-color: #f8f8f8;
   }
   /deep/ .el-collapse-item__wrap {
     border-radius: 4px;
@@ -414,14 +314,15 @@
     /deep/ .el-input__inner {
       width: 100px;
     }
+    /deep/ .el-radio {
+      margin-right: 15px;
+      position: relative;
+      margin-top: 12px;
+    }
     p {
       display: flex;
       margin-right: 50px;
-      .el-radio {
-        position: relative;
-        top: 12px;
-        margin-right: 15px;
-      }
+
       .el-inut {
         margin-right: 15px;
       }
@@ -434,7 +335,7 @@
         color: #333;
         font-size: 12px;
         padding-top: 14px;
-        margin-left: -13px;
+        margin-left: 0px;
       }
     }
   }
@@ -455,37 +356,26 @@
   div.item {
     overflow: hidden;
     margin-bottom: 10px;
-    /deep/ .el-input__inner {
-      width: 142px;
-    }
-
+    height: 42px;
     div.left {
       float: left;
       display: flex;
       line-height: 40px;
       margin-left: 20px;
-      max-width: 250px;
+      width: 24%;
+      margin-right: 10px;
       span {
         display: inline-block;
-        width: 111px;
+        width: 110px;
       }
     }
     div.right {
       float: left;
-      margin-left: 90px;
       line-height: 40px;
       text-align: center;
-      p {
-        margin-bottom: 10px;
-        & > div {
-          display: inline-block;
-          width: 150px;
-          margin-left: 10px;
-          margin-right: 10px;
-        }
-      }
-      p > span {
-        width: 80px;
+      width: 55%;
+      /deep/ .el-input__inner {
+        width: 100%;
       }
       .el-button {
         width: 200px;
@@ -500,10 +390,6 @@
       }
     }
   }
-  // /deep/ .el-upload {
-  //   position: relative;
-  //   left: 254px;
-  // }
 }
 </style>
 
@@ -512,10 +398,93 @@ export default {
   data() {
     return {
       form: {
-        productType: "疾病"
+        productType: "疾病",
+        responsbilities: [
+          {
+            includeDetail: "等待期",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "重大疾病保险金",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "轻症疾病保险金",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "中症疾病保险金",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "特定疾病保险金",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "疾病终末期保险金",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "身故保险金",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "全残保险金",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "保费豁免",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "其它",
+            ifInclude: "",
+            responsibilityDescribe: ""
+          },
+          {
+            includeDetail: "是否保证续保",
+            ifInclude: ""
+          }
+        ],
+        productSubType:'',
+        proDesignType:'',
+        masterOrAppend:'',
+        insuranceType:'',
+        insuranceTermType:'',
+        insuranceAgeBegin:'',
+        insuranceAgeEnd:'',
+        premFrequency:'',
+        premPeriodType:'',
+        coverPeriodType:'',
+        coverPeriod:'',
+        marketSize:'',
+        bussinessConstruction:'',
+        salesStrategy:'',
+        expectOnlineDate:'',
+        premiumScale:'',
+        eachAvgPremiun:'',
+        tradeResearch: { fileName: "", content: "", filePath: "" },
+        specialAssureRequie: { fileName: "", content: "", filePath: "" },
+        specialInsuranceReq: { fileName: "", content: "", filePath: "" },
+        expectRate:'',
+        rateBusinessType:'',
+        rateNote:'',
+        newBusinessFactor:'',
+        otherSpecialRequied:'',
       },
-     activeNames: ['1','2','3','4',"5"],
-       valueD: false
+      activeNames: ["1", "2", "3", "4", "5"],
+      valueD: false,
+      disable3: false,
+      payment: ""
     };
   },
   computed: {
@@ -523,25 +492,33 @@ export default {
       let { params } = this.$route;
       return params;
     },
-     valueType:function(){
+    valueType: function() {
       return this.form.newBusinessClass;
+    },
+    insuranceType: function() {
+      return this.form.insuranceTermType;
     }
   },
-   watch: {
-    valueType(val){
-       this.valueD=true;
-     if(val==="AAAAA"){
-       this.form.newBusinessFactor='140%';
-     }else if(val==="AAAA"){
-        this.form.newBusinessFactor='120%';
-     }else if(val==="AAA"){
-        this.form.newBusinessFactor='100%';
-     }else if(val==="AA"){
-        this.form.newBusinessFactor='80%';
-     }else if(val==="A"){
-        this.form.newBusinessFactor='55%';
-     }
-    
+  watch: {
+    valueType(val) {
+      this.valueD = true;
+      if (val === "AAAAA") {
+        this.form.newBusinessFactor = "140%";
+      } else if (val === "AAAA") {
+        this.form.newBusinessFactor = "120%";
+      } else if (val === "AAA") {
+        this.form.newBusinessFactor = "100%";
+      } else if (val === "AA") {
+        this.form.newBusinessFactor = "80%";
+      } else if (val === "A") {
+        this.form.newBusinessFactor = "55%";
+      }
+    },
+    insuranceType(val) {
+      console.log(val);
+      if (val === "1") {
+        this.form.responsbilities.pop();
+      }
     }
   },
   methods: {
@@ -551,26 +528,36 @@ export default {
         let _base64 = reader.result;
         console.log(_base64);
         let BASE64 = _base64.split(",");
-        this.form.file.specialInsuranceReq.content = BASE64[1];
+        this.form.specialInsuranceReq.content = BASE64[1];
       };
       reader.readAsDataURL(file.raw);
-      this.file.specialInsuranceReq.fileName = file.name;
+      this.form.specialInsuranceReq.fileName = file.name;
     },
-    preservation(file){
+    preservation(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.specialAssureRequie.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.form.specialAssureRequie.fileName = file.name;
+    },
+    handleChange(file) {
        let reader = new FileReader();
       reader.onload = () => {
         let _base64 = reader.result;
         console.log(_base64);
         let BASE64 = _base64.split(",");
-        this.form.specialInsuranceReq.content = BASE64[1];
+        this.form.tradeResearch.content = BASE64[1];
       };
       reader.readAsDataURL(file.raw);
-      this.specialInsuranceReq.fileName = file.name;
+      this.form.tradeResearch.fileName = file.name;
     },
-    handleChange(val) {
-      console.log(val);
+    onSubmit() {
+      console.log(this.form);
     },
-    onSubmit() {},
     submitUpload() {},
     handleRemove(file, fileList) {
       console.log(file, fileList);

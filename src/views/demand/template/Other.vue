@@ -3,19 +3,25 @@
     <h3>需求中心</h3>
     <p class="minTitle">其它</p>
     <el-form ref="form" :model="form" label-width="100px" :inline="true">
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="activeNames">
         <el-collapse-item title="产品要素" name="1">
           <el-form-item label="产品大类">
             <el-input v-model="form.productType" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="产品类型">
-            <el-select v-model="form.productSubType" placeholder="请选择产品类型">
-              <el-option label="护理类型" value="护理类型"></el-option>
-              <el-option label="失能收入损失保险" value="失能收入损失保险"></el-option>
+            <el-select v-model="form.productSubType" placeholder="请选择主产品类型">
+              <el-option label="定期寿险" value="定期寿险"></el-option>
+              <el-option label="终身寿险" value="终身寿险"></el-option>
+              <el-option label="两全保险" value="两全保险"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="设计类型">
-            <el-input v-model="form.productDesignType"></el-input>
+            <el-select v-model="form.proDesignType" placeholder="请选择主产品类型">
+              <el-option label="普通型" value="普通型"></el-option>
+              <el-option label="分红型" value="分红型"></el-option>
+              <el-option label="万能型" value="万能型"></el-option>
+              <el-option label="投资连结型" value="投资连结型"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="主附险">
             <el-select v-model="form.masterOrAppend" placeholder="请选择主附险">
@@ -35,53 +41,54 @@
               <el-option label="短期" value="1"></el-option>
             </el-select>
           </el-form-item>
+
           <el-form-item label="投保开始年龄">
-            <el-input v-model="form.insuranceAgeBegin" placeholder="请输入开始年龄"></el-input>
+            <el-input v-model="form.insuranceAgeBegin"></el-input>
           </el-form-item>
           <el-form-item label="投保结束年龄">
-            <el-input v-model="form.insuranceAgeEnd" placeholder="请输入结束年龄"></el-input>
+            <el-input v-model="form.insuranceAgeEnd"></el-input>
           </el-form-item>
           <el-form-item label="缴费方式">
-            <el-select v-model="form.premPeriodType" placeholder="请选择缴费方式">
+            <el-select v-model="form.premFrequency" multiple placeholder="请选择缴费方式">
               <el-option label="年交" value="年交"></el-option>
               <el-option label="季交" value="季交"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="缴费方式" class="insurance">
-            <el-radio-group v-model="form.premPeriod">
-              <p>
-                <el-radio label="按年龄"></el-radio>
-                <el-input v-model="form.age"></el-input>
+          <el-form-item label="缴费期间" class="insurance">
+            <el-radio-group v-model="form.premPeriodType" :disabled="disable3">
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="form.premPeriodType=='按年龄'">
+                <el-input v-model="form.premPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.checked">终身</el-checkbox>
+                <!-- <el-checkbox v-model="form.premPeriod" label="终身"></el-checkbox> -->
               </p>
-              <p>
-                <el-radio label="按年份"></el-radio>
-                <el-input v-model="form.year"></el-input>
+              <el-radio label="按年份"></el-radio>
+              <p v-show="form.premPeriodType=='按年份'">
+                <el-input v-model="form.premPeriod"></el-input>
                 <span>年</span>
               </p>
-              <p>
-                <el-radio label="其他"></el-radio>
-                <el-input v-model="form.other"></el-input>
+              <el-radio label="其它" title="请在右方输入"></el-radio>
+              <p v-show="form.premPeriodType=='其它'">
+                <el-input v-model="form.premPeriod"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="保险期间" class="insurance">
-            <el-radio-group v-model="form.resource">
-              <p>
-                <el-radio label="按年龄"></el-radio>
-                <el-input v-model="form.age"></el-input>
+          <el-form-item style="display:block" label="保险期间" class="insurance">
+            <el-radio-group v-model="form.coverPeriodType">
+              <el-radio label="按年龄"></el-radio>
+              <p v-show="form.coverPeriodType=='按年龄'">
+                <el-input v-model="form.coverPeriod"></el-input>
                 <span>岁</span>
-                <el-checkbox v-model="form.checked">终身</el-checkbox>
+                <!-- <el-checkbox v-model="form.checked">终身</el-checkbox> -->
               </p>
-              <p>
-                <el-radio label="按年份"></el-radio>
-                <el-input v-model="form.year"></el-input>
+              <el-radio label="按年份"></el-radio>
+              <p v-show="form.coverPeriodType=='按年份'">
+                <el-input v-model="form.coverPeriod"></el-input>
                 <span>年</span>
               </p>
-              <p>
-                <el-radio label="其他"></el-radio>
-                <el-input v-model="form.other"></el-input>
+              <el-radio label="其它"></el-radio>
+              <p v-show="form.coverPeriodType=='其它'">
+                <el-input v-model="form.coverPeriod"></el-input>
               </p>
             </el-radio-group>
           </el-form-item>
@@ -122,6 +129,7 @@
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               action
+              :on-change="handleChange"
               :auto-upload="false"
             >
               <el-button slot="trigger" size="small" type="primary">上传文件</el-button>
@@ -152,7 +160,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="新业务价值系数" label-width="180px">
-            <el-select v-model="form.newBusinessFactor" placeholder="请选择价值系数" :disabled='valueD'>
+            <el-select v-model="form.newBusinessFactor" placeholder="请选择价值系数" :disabled="valueD">
               <el-option label="140%" value="140"></el-option>
               <el-option label="120%" value="120"></el-option>
               <el-option label="100%" value="10"></el-option>
@@ -184,7 +192,7 @@
             </el-upload>
           </el-form-item>
         </el-collapse-item>
-         <el-collapse-item title="运营规则" name="4">
+        <el-collapse-item title="运营规则" name="4">
           <el-form-item label="特殊保全需求" label-width="180px">
             <el-upload
               class="upload-demo"
@@ -213,6 +221,7 @@
               :on-remove="handleRemove"
               :on-change="special"
               action
+              :limit="1"
               :auto-upload="false"
             >
               <el-input class="inputText" v-model="form.gm"></el-input>
@@ -221,7 +230,7 @@
                 slot="trigger"
                 size="small"
                 type="primary"
-                title="上传费率计算文件"
+                title="只能上传一个文件"
               >上传文件</el-button>
             </el-upload>
           </el-form-item>
@@ -235,16 +244,16 @@
               <el-input
                 type="textarea"
                 placeholder="请输入内容"
-                 :autosize="true"
-                v-model="form.textarea"
+                :autosize="true"
+                v-model="form.responsibilityDescribe"
                 maxlength="300"
-                rows='3'
+                rows="3"
                 show-word-limit
               ></el-input>
             </el-form-item>
           </div>
-           <el-form-item label="是否保证续保">
-            <el-select v-model="form.mainRisk" placeholder="请选择缴费方式">
+          <el-form-item label="是否保证续保">
+            <el-select v-model="form.ifEnsureContinu" placeholder="请选择缴费方式">
               <el-option label="是" value="1"></el-option>
               <el-option label="否" value="0"></el-option>
             </el-select>
@@ -301,6 +310,11 @@
     /deep/ .el-input__inner {
       width: 100px;
     }
+    /deep/ .el-radio {
+      margin-right: 15px;
+      position: relative;
+      margin-top: 12px;
+    }
     p {
       display: flex;
       margin-right: 50px;
@@ -343,7 +357,7 @@
     .el-form-item {
       width: 100%;
       padding-left: 20px;
-     /deep/ .el-form-item__content {
+      /deep/ .el-form-item__content {
         width: 60%;
         .el-form--inline .el-form-item__content {
           width: 100%;
@@ -363,15 +377,34 @@ export default {
   data() {
     return {
       form: {
-        name: "其它",
-        type: "意外伤害保险",
-        designType: "普通型",
-        mainRisk: "",
-        age: "0-60",
-        checked: "",
-        date1: "2019-10-19"
+        productType: "意外",
+        productSubType: "",
+        proDesignType: "",
+        masterOrAppend: "",
+        insuranceType: "",
+        insuranceTermType: "",
+        insuranceAgeBegin: "",
+        insuranceAgeEnd: "",
+        premFrequency: "",
+        premPeriodType: "",
+        coverPeriodType: "",
+        coverPeriod: "",
+        marketSize: "",
+        bussinessConstruction: "",
+        salesStrategy: "",
+        expectOnlineDate: "",
+        premiumScale: "",
+        eachAvgPremiun: "",
+        tradeResearch: { fileName: "", content: "", filePath: "" },
+        specialAssureRequie: { fileName: "", content: "", filePath: "" },
+        specialInsuranceReq: { fileName: "", content: "", filePath: "" },
+        expectRate: "",
+        rateBusinessType: "",
+        rateNote: "",
+        newBusinessFactor: "",
+        otherSpecialRequied: ""
       },
-       options: [
+      options: [
         {
           value: "保单周",
           label: "保单周"
@@ -391,8 +424,13 @@ export default {
           label: "年交保费"
         }
       ],
-      activeNames: ["1", "2", "3", "4",'5'],
-       valueD:false
+      activeNames: ["1", "2", "3", "4", "5"],
+      disable: false,
+      disable1: false,
+      disable2: false,
+      disable3: false,
+      valueD: false,
+      show: false
     };
   },
   computed: {
@@ -400,25 +438,24 @@ export default {
       let { params } = this.$route;
       return params;
     },
-     valueType:function(){
+    valueType: function() {
       return this.form.newBusinessClass;
     }
   },
-   watch: {
-    valueType(val){
-       this.valueD=true;
-     if(val==="AAAAA"){
-       this.form.newBusinessFactor='140%';
-     }else if(val==="AAAA"){
-        this.form.newBusinessFactor='120%';
-     }else if(val==="AAA"){
-        this.form.newBusinessFactor='100%';
-     }else if(val==="AA"){
-        this.form.newBusinessFactor='80%';
-     }else if(val==="A"){
-        this.form.newBusinessFactor='55%';
-     }
-    
+  watch: {
+    valueType(val) {
+      this.valueD = true;
+      if (val === "AAAAA") {
+        this.form.newBusinessFactor = "140%";
+      } else if (val === "AAAA") {
+        this.form.newBusinessFactor = "120%";
+      } else if (val === "AAA") {
+        this.form.newBusinessFactor = "100%";
+      } else if (val === "AA") {
+        this.form.newBusinessFactor = "80%";
+      } else if (val === "A") {
+        this.form.newBusinessFactor = "55%";
+      }
     }
   },
   methods: {
@@ -428,24 +465,32 @@ export default {
         let _base64 = reader.result;
         console.log(_base64);
         let BASE64 = _base64.split(",");
-        this.form.file.specialInsuranceReq.content = BASE64[1];
+        this.form.specialInsuranceReq.content = BASE64[1];
       };
       reader.readAsDataURL(file.raw);
-      this.file.specialInsuranceReq.fileName = file.name;
+      this.form.specialInsuranceReq.fileName = file.name;
     },
-    preservation(file){
-       let reader = new FileReader();
+    preservation(file) {
+      let reader = new FileReader();
       reader.onload = () => {
         let _base64 = reader.result;
         console.log(_base64);
         let BASE64 = _base64.split(",");
-        this.form.specialInsuranceReq.content = BASE64[1];
+        this.form.specialAssureRequie.content = BASE64[1];
       };
       reader.readAsDataURL(file.raw);
-      this.specialInsuranceReq.fileName = file.name;
+      this.form.specialAssureRequie.fileName = file.name;
     },
-    handleChange(val) {
-      console.log(val);
+    handleChange(file) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        let _base64 = reader.result;
+        console.log(_base64);
+        let BASE64 = _base64.split(",");
+        this.form.tradeResearch.content = BASE64[1];
+      };
+      reader.readAsDataURL(file.raw);
+      this.form.tradeResearch.fileName = file.name;
     },
     onSubmit() {},
     submitUpload() {},
