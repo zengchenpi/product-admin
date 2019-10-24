@@ -1437,6 +1437,7 @@ export default {
         rateNote:'',
         newBusinessFactor:'',
         otherSpecialRequied:'',
+         ifMaster:'',
       },
       activeNames: ["1", "2", "3", "4", "5"],
       length: ["1"],
@@ -1580,6 +1581,9 @@ export default {
     fileList(val) {
       console.log(val);
     }
+  },
+   created:function(){
+     this.form.ifMaster=sessionStorage.getItem('ifMaster');
   },
   methods: {
      special(file) {

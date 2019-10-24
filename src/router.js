@@ -39,6 +39,12 @@ export default new Router({
           name:'addTemplate',
           component: () => import('./views/demand/addTemplate')
         },
+        //添加需求
+        {
+          path:'/add/demand',
+          name:'addDemand',
+          component: () => import('./views/demand/addDemand')
+        },
         // 默认页面
         {
           path: '*',

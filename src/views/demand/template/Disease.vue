@@ -455,6 +455,7 @@ export default {
             ifInclude: ""
           }
         ],
+         ifMaster:'',
         productSubType:'',
         proDesignType:'',
         masterOrAppend:'',
@@ -486,6 +487,9 @@ export default {
       disable3: false,
       payment: ""
     };
+  },
+   created:function(){
+     this.form.ifMaster=sessionStorage.getItem('ifMaster');
   },
   computed: {
     value: function() {

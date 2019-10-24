@@ -540,13 +540,18 @@ export default {
         rateNote:'',
         newBusinessFactor:'',
         otherSpecialRequied:'',
+         ifMaster:'',
       },
       activeNames: ["1", "2", "3", "4", "5"],
       checkList: [],
       checkList1: [],
       valueD: false,
+      disable3: false,
       payment:'',
     };
+  },
+   created:function(){
+     this.form.ifMaster=sessionStorage.getItem('ifMaster');
   },
   computed: {
     value: function() {

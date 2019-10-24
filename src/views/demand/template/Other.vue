@@ -377,6 +377,7 @@ export default {
   data() {
     return {
       form: {
+         ifMaster:'',
         productType: "意外",
         productSubType: "",
         proDesignType: "",
@@ -441,6 +442,9 @@ export default {
     valueType: function() {
       return this.form.newBusinessClass;
     }
+  },
+   created:function(){
+     this.form.ifMaster=sessionStorage.getItem('ifMaster');
   },
   watch: {
     valueType(val) {

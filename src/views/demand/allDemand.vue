@@ -5,17 +5,7 @@
     </div>
     <searchFrom :formConfig="formConfig" :value="value" :block="block"></searchFrom>
     <div class="btn">
-      <el-dropdown split-button type="primary" @command="handleCommand">
-        新增
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="寿险">寿险</el-dropdown-item>
-          <el-dropdown-item command="年金">年金</el-dropdown-item>
-          <el-dropdown-item command="疾病">疾病</el-dropdown-item>
-          <el-dropdown-item command="医疗">医疗</el-dropdown-item>
-          <el-dropdown-item command="意外">意外</el-dropdown-item>
-          <el-dropdown-item command="其它">其它</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+     <el-button @click="addNew" type="primary">新增</el-button>
     </div>
     <el-table :data="tableData"  border style="width: 100%" @select="select">
      
@@ -25,7 +15,7 @@
       <el-table-column align="center" prop="introducer" label="提出人" min-width="90px"></el-table-column>
       <el-table-column align="center" prop="state" label="状态" min-width="90px"></el-table-column>
       <el-table-column align="center" label="操作" min-width="80px">
-        <template slot-scope="scope">
+      <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleDetail(scope.row)">需求详情</el-button>
         </template>
       </el-table-column>
@@ -243,7 +233,7 @@ export default {
           productType: "年金",
           productSubType: "小虎",
           province: "上海",
-          time: "2019-10-15",
+          date: "2019-10-15",
           perfect: "90%",
           introducer: "小杰",
           public: "需求详情",
@@ -255,7 +245,7 @@ export default {
           productType: "寿险",
           productSubType: "小虎",
           province: "上海",
-          time: "2019-10-15",
+          date: "2019-10-15",
           perfect: "85",
           introducer: "小蓝",
           public: "需求详情",
@@ -267,7 +257,7 @@ export default {
           productType: "其它",
           productSubType: "小虎",
           province: "上海",
-          time: "2019-10-15",
+          date: "2019-10-15",
           perfect: "85",
           introducer: "小蓝",
           public: "需求详情",
@@ -313,9 +303,8 @@ export default {
        console.log(name)
       this.$router.push("/add/template/" + name);
     },
-    handleCommand(value) {
-      let detail = value;
-      this.$router.push("/add/template/" + detail);
+    addNew() {
+      this.$router.push("/add/demand");
     }
   }
 };

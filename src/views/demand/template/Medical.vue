@@ -618,6 +618,7 @@
 
 <script>
 export default {
+  props: ['ifMaster'],
   data() {
     return {
       form: {
@@ -788,7 +789,8 @@ export default {
         rateBusinessType: "",
         rateNote: "",
         newBusinessFactor: "",
-        otherSpecialRequied: ""
+        otherSpecialRequied: "",
+         ifMaster:'',
       },
       activeNames: ["1", "2", "3", "4", "5"],
       checked: true,
@@ -830,6 +832,9 @@ export default {
         this.form.newBusinessFactor = "55%";
       }
     }
+  },
+   created:function(){
+     this.form.ifMaster=sessionStorage.getItem('ifMaster');
   },
   methods: {
     special(file) {

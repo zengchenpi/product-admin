@@ -996,6 +996,7 @@ export default {
             responsibilityDescribe: ""
           }
         ],
+        ifMaster:'',
         tradeResearch: { fileName: "", content: "", filePath: "" },
         specialAssureRequie: { fileName: "", content: "", filePath: "" },
         specialInsuranceReq: { fileName: "", content: "", filePath: "" }
@@ -1079,6 +1080,9 @@ export default {
       }
     }
   },
+  created: function() {
+    this.form.ifMaster = sessionStorage.getItem("ifMaster");
+  },
   methods: {
     special(file) {
       let reader = new FileReader();
@@ -1115,8 +1119,8 @@ export default {
     },
     onSubmit() {
       var myDate = new Date();
-      this.form.date =myDate.toLocaleDateString();
-      this.form.introducer=this.$store.state.username;
+      this.form.date = myDate.toLocaleDateString();
+      this.form.introducer = this.$store.state.username;
       this.$store.commit("updateData", this.form);
     },
     back() {
