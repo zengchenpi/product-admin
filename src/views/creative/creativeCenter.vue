@@ -3,46 +3,8 @@
     <div class="title">
       <h2>创意中心</h2>
     </div>
-    <!-- <el-form :inline="true" :model="Ideas" class="demo-form-inline" label-width="75px">
-      <el-form-item label="产品类型">
-        <el-select v-model="Ideas.type" placeholder="选择产品类型">
-          <el-option label="寿险" value="寿险"></el-option>
-          <el-option label="年金" value="年金"></el-option>
-          <el-option label="疾病" value="疾病"></el-option>
-          <el-option label="医疗" value="医疗"></el-option>
-          <el-option label="意外" value="意外"></el-option>
-          <el-option label="其它" value="其它"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="产品亮点">
-        <el-input v-model="Ideas.lightspot" placeholder="请输入"></el-input>
-      </el-form-item>
-      <el-form-item label="提出人">
-        <el-input v-model="Ideas.peoplename" placeholder="小芳"></el-input>
-      </el-form-item>
-      <el-form-item label="审批状态">
-        <el-input v-model="Ideas.state" placeholder="未审核"></el-input>
-      </el-form-item>
-      <el-form-item label="创意名称">
-        <el-input v-model="Ideas.ideaName" placeholder="请输入"></el-input>
-      </el-form-item>
-      <el-form-item label="提出时间">
-        <el-form-item prop="time">
-          <el-date-picker
-            type="date"
-            format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy.MM.dd"
-            placeholder="选择日期"
-            v-model="Ideas.time"
-            style="width: 100%;"
-          ></el-date-picker>
-        </el-form-item>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit(Ideas)">搜素</el-button>
-      </el-form-item>
-    </el-form> -->
      <searchFrom :formConfig="formConfig" :value="value" :block="block"></searchFrom>
+     <div class="btn"> <el-button type="primary" icon="el-icon-shopping-cart-full">加入操作车</el-button><el-button type="primary" icon="el-icon-shopping-cart-full">查看操作车</el-button></div>
     <el-table border :data="tableData" style="width: 100%" @select="select">
       <el-table-column align="center" type="selection" min-width="55"></el-table-column>
       <el-table-column align="center"  label="ID" type="index" min-width="80px"></el-table-column>
@@ -72,7 +34,7 @@
     <el-pagination :page-size="20" background :pager-count="11" layout="prev, pager, next" :total="20"></el-pagination>
   </div>
 </template>
-<style type="text/css" lang="scss">
+<style lang="scss" scoped>
 .creative-center {
   text-align: center;
   padding: 0 20px;
@@ -80,6 +42,11 @@
   div {
     &.title {
       height: 60px;
+      background-color: #ffffff;
+      width: 99%;
+      box-sizing: border-box;
+      padding-left: 10px;
+      line-height: 60px;
       h2 {
         text-align: left;
       }
@@ -93,8 +60,9 @@
     }
   }
   .el-form {
-    margin-top: 15px;
+    margin-top: 0px;
     text-align: left;
+     box-sizing: border-box;
     .el-input {
       width: 65%;
     }
@@ -114,6 +82,11 @@
   }
   .el-pagination{
     margin-top: 20px;
+  }
+  div.btn{
+    float: right;
+    margin-bottom: 20px;
+    margin-right: 15px;
   }
 }
 </style>

@@ -6,8 +6,7 @@
         <el-menu
           :default-active="defaultActive"
           class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose"
+         
           @select="handleSelect"
           background-color="#304156"
           text-color="#fff"
@@ -62,10 +61,47 @@
             <i class="el-icon-menu"></i>
             <span slot="title">监管规则中心</span>
           </el-menu-item>-->
-          <el-menu-item index="4">
-            <i class="el-icon-menu"></i>
-            <span slot="title">我的待办</span>
-          </el-menu-item>
+          <el-submenu index="4">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>我的待办</span>
+            </template>
+            <el-menu-item-group>
+              <!-- <router-link tag="div" to="/demand/allDemand"> -->
+                <el-menu-item index="4-1">产品日程</el-menu-item>
+              <!-- </router-link> -->
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <router-link to="/myuntreated/mydemand" tag="p">
+                <el-menu-item index="4-2">我的需求</el-menu-item>
+              </router-link>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <router-link to="/myuntreated/demandAudit" tag="p">
+                <el-menu-item index="4-3">需求审核</el-menu-item>
+              </router-link>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <router-link to='/myuntreated/reviewReturnRevision' tag='p'>
+                <el-menu-item index="4-4">审核退回修订</el-menu-item>
+              </router-link>
+            </el-menu-item-group>
+             <el-menu-item-group>
+              <el-menu-item index="4-5">评估退回修订</el-menu-item>
+            </el-menu-item-group>
+             <el-menu-item-group>
+              <el-menu-item index="4-6">费率确认</el-menu-item>
+            </el-menu-item-group>
+             <el-menu-item-group>
+              <el-menu-item index="4-7">产品名称确认</el-menu-item>
+            </el-menu-item-group>
+             <el-menu-item-group>
+              <el-menu-item index="4-8">宣传材料制作</el-menu-item>
+            </el-menu-item-group>
+             <el-menu-item-group>
+              <el-menu-item index="4-9">上市申请</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
           <el-menu-item index="5">
             <i class="el-icon-menu"></i>
             <span slot="title">我的已办</span>
@@ -83,7 +119,7 @@
             <a @click="exit">退出</a>
           </div>
         </div>
-        <transition name="fade">
+        <transition name="breadcrumb fade">
           <router-view></router-view>
         </transition>
       </el-col>
@@ -159,11 +195,47 @@
   }
   .fade-enter-active,
   .fade-leave-active {
-    transition: opacity 0.08s;
+    transition: opacity 0.28s;
   }
+
   .fade-enter,
   .fade-leave-active {
     opacity: 0;
+  }
+
+  /* fade-transform */
+  .fade-transform-leave-active,
+  .fade-transform-enter-active {
+    transition: all 0.5s;
+  }
+
+  .fade-transform-enter {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  .fade-transform-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  .breadcrumb-enter-active,
+  .breadcrumb-leave-active {
+    transition: all 0.5s;
+  }
+
+  .breadcrumb-enter,
+  .breadcrumb-leave-active {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  .breadcrumb-move {
+    transition: all 0.5s;
+  }
+
+  .breadcrumb-leave-active {
+    position: absolute;
   }
 }
 </style>
@@ -182,12 +254,12 @@ export default {
     }
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key,keyPath) {
-      console.log(key,keyPath);
-    },
+    // handleOpen(key, keyPath) {
+    //   // console.log(key, keyPath);
+    // },
+    // handleClose(key, keyPath) {
+    //   // console.log(key, keyPath);
+    // },
     handleSelect(key) {
       sessionStorage.setItem("active", key);
     },

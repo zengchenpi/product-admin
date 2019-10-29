@@ -10,6 +10,7 @@ Vue.use(Router)
 // }
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -35,15 +36,33 @@ export default new Router({
         },
         // 添加模板
         {
-          path:'/add/template/:name',
-          name:'addTemplate',
+          path: '/add/template/:name',
+          name: 'addTemplate',
           component: () => import('./views/demand/addTemplate')
         },
         //添加需求
         {
-          path:'/add/demand',
-          name:'addDemand',
+          path: '/add/demand',
+          name: 'addDemand',
           component: () => import('./views/demand/addDemand')
+        },
+        //我的待办 我的需求
+        {
+          path: '/myuntreated/mydemand',
+          name: 'mydemand',
+          component: () => import('./views/myuntreated/MyDemand')
+        }, 
+        //我的待办 需求审核
+        {
+          path: '/myuntreated/demandAudit',
+          name: 'demandAudit',
+          component: () => import('./views/myuntreated/DemandAudit')
+        },
+        //审核退回修订
+        {
+          path:'/myuntreated/reviewReturnRevision',
+          name:'reviewReturnRevision',
+          component: ()=>import('./views/myuntreated/reviewReturnRevision')
         },
         // 默认页面
         {

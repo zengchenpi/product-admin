@@ -1,7 +1,7 @@
 <template>
   <div class="page-register">
     <div class="regist-from">
-      <el-form status-icon ref="ruleForm"  :model="formData" :rules="rules">
+      <el-form status-icon ref="ruleForm" :model="formData" :rules="rules">
         <div class="title">标准化产品开发平台</div>
 
         <el-form-item prop="username">
@@ -17,13 +17,15 @@
           </div>
         </el-form-item>
       </el-form>
-      <el-button type="primary" @click="onSubmit" :disabled='disabled' :title="title">登录 </el-button>
+      <el-button type="primary" @click="onSubmit" :disabled="disabled" :title="title">登录</el-button>
       <div class="prompt">
-        <router-link to="/" title="找回密码？">忘记密码 </router-link>
+        <router-link to="/" title="找回密码？">忘记密码</router-link>
         <router-link to="/" title="前往注册">新用户注册</router-link>
       </div>
     </div>
+   
   </div>
+  
 </template>
 <style lang="scss" scoped>
 .page-register {
@@ -51,10 +53,10 @@
     font-weight: bold;
     text-align: center;
   }
-   /deep/ .el-form-item__error{
-      top: 70%;
-      left: 100px;
-    }
+  /deep/ .el-form-item__error {
+    top: 70%;
+    left: 100px;
+  }
   div.item {
     height: 50px;
     width: 300px;
@@ -62,7 +64,7 @@
     margin-bottom: 30px;
     border: 1px solid #dddddd;
     position: relative;
-   
+
     /deep/ .el-input__inner {
       height: 50px;
       width: 300px;
@@ -98,45 +100,46 @@
   .el-button {
     padding: 15px 150px;
   }
-  .el-form-item{
+  .el-form-item {
     margin-bottom: 0;
   }
 }
 </style>
 <script>
-import { checkUsername, checkPassword } from '../../tools/validator';
+import { checkUsername, checkPassword } from "../../tools/validator";
 export default {
   data() {
     return {
       formData: {
-       username:'',
-       password:'',
+        username: "",
+        password: ""
       },
-      rules:{
-        username: [{ trigger: 'blur', validator: checkUsername }],
-				password: [{ trigger: 'blur', validator: checkPassword }]
-      },
-     
+      rules: {
+        username: [{ trigger: "blur", validator: checkUsername }],
+        password: [{ trigger: "blur", validator: checkPassword }]
+      }
     };
   },
-  computed:{
-    title:function(){
-      if(this.disabled){
-        return '请先输入登录信息';
-      }
-      else return ""
+  mounted: function() {
+  },
+  
+  computed: {
+    title: function() {
+      if (this.disabled) {
+        return "请先输入登录信息";
+      } else return "";
     },
-     disabled:function(){
-       if(this.formData.username&&this.formData.password){
-         return false;
-       }
-       return true;
-     }
+    disabled: function() {
+      if (this.formData.username && this.formData.password) {
+        return false;
+      }
+      return true;
+    }
   },
   methods: {
     onSubmit() {
       let username = this.formData.username;
-      this.$store.commit('updateUsername',username)
+      this.$store.commit("updateUsername", username);
     }
   }
 };

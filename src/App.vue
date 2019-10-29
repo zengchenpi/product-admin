@@ -37,3 +37,9 @@ body {
   }
 }
 </style>
+
+<script>
+export default {
+ 
+}
+</script>

@@ -1,11 +1,13 @@
 <template>
   <el-container>
     <el-header>
-      <h2>需求中心</h2>
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item>生产中心</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/demand/allDemand' }">所有需求</el-breadcrumb-item>
+        <el-breadcrumb-item>新增产品</el-breadcrumb-item>
+      </el-breadcrumb>
       <el-row>
-        <el-col :span="2">
-          <span>新增</span>
-        </el-col>
+        
         <el-col :span="4">
           <el-button type="primary">创意导入</el-button>
         </el-col>
@@ -108,7 +110,7 @@
             </el-row>
           </el-collapse-item>
           <el-collapse-item title="搭配产品" name="3">
-             <el-row style="padding: 0 15px 10px;border-bottom:2px solid #ddd;">
+            <el-row style="padding: 0 15px 10px;border-bottom:2px solid #ddd;">
               <el-dropdown split-button type="primary" @command="collocation">
                 新增
                 <el-dropdown-menu slot="dropdown">
@@ -157,12 +159,11 @@
               </el-table>
             </el-row>
           </el-collapse-item>
-         
         </el-collapse>
         <el-form-item class="btn">
-           <el-button type="info">保存</el-button>
-           <el-button type="primary">提交</el-button>
-           <el-button >返回</el-button>
+          <el-button type="info">保存</el-button>
+          <el-button type="primary">提交</el-button>
+          <el-button>返回</el-button>
         </el-form-item>
       </el-form>
     </el-main>
@@ -174,6 +175,9 @@
     background-color: #fff;
     padding-bottom: 20px;
     height: 80px !important;
+  }
+  .el-breadcrumb{
+    line-height: 30px;
   }
   /deep/ .el-collapse-item__header {
     border: 1px solid #bbb;
@@ -189,11 +193,11 @@
     margin-top: 10px;
     padding-top: 10px;
   }
-  .btn{
+  .btn {
     margin-top: 20px;
     text-align: center;
     width: 100%;
-    .el-button{
+    .el-button {
       margin-right: 30px;
     }
   }
@@ -217,18 +221,6 @@ export default {
           insuranceTermType: "短期",
           productDesignType: "上海",
           introducer: "普陀区"
-        },
-        {
-          productType: "2016-05-01",
-          insuranceTermType: "王小虎",
-          productDesignType: "上海",
-          introducer: "普陀区"
-        },
-        {
-          productType: "2016-05-03",
-          insuranceTermType: "王小虎",
-          productDesignType: "上海",
-          introducer: "普陀区"
         }
       ],
       matchData: [
@@ -243,18 +235,6 @@ export default {
           insuranceTermType: "短期",
           productDesignType: "上海",
           introducer: "普陀区"
-        },
-        {
-          productType: "2016-05-01",
-          insuranceTermType: "王小虎",
-          productDesignType: "上海",
-          introducer: "普陀区"
-        },
-        {
-          productType: "2016-05-03",
-          insuranceTermType: "王小虎",
-          productDesignType: "上海",
-          introducer: "普陀区"
         }
       ]
     };
@@ -263,58 +243,61 @@ export default {
     handleCommand(value) {
       let detail = value;
       this.$router.push({
-        name:'addTemplate',
-        params: { 
-                name: detail, 
-            }
+        name: "addTemplate",
+        params: {
+          name: detail
+        }
       });
-     sessionStorage.setItem('ifMaster',1);
+      sessionStorage.setItem("ifMaster", 1);
     },
-    collocation(value){
+    collocation(value) {
       let detail = value;
       this.$router.push({
-        name:'addTemplate',
-        params: { 
-                name: detail, 
-            }
+        name: "addTemplate",
+        params: {
+          name: detail
+        }
       });
-     sessionStorage.setItem('ifMaster',0);
+      sessionStorage.setItem("ifMaster", 0);
     },
-    handleDelete(index){
-      
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.tableData.splice(index,1);
+    handleDelete(index) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.tableData.splice(index, 1);
           this.$message({
-            type: 'success',
-            message: '删除成功!'
+            type: "success",
+            message: "删除成功!"
           });
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
+            type: "info",
+            message: "已取消删除"
+          });
         });
     },
-    handleMatchDelete(index){
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.matchData.splice(index,1);
+    handleMatchDelete(index) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.matchData.splice(index, 1);
           this.$message({
-            type: 'success',
-            message: '删除成功!'
+            type: "success",
+            message: "删除成功!"
           });
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
+            type: "info",
+            message: "已取消删除"
+          });
         });
     }
   }
