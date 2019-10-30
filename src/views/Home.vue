@@ -81,25 +81,30 @@
                 <el-menu-item index="4-3">需求审核</el-menu-item>
               </router-link>
             </el-menu-item-group>
+             <el-menu-item-group>
+              <router-link to="/myuntreated/demandAudit" tag="p">
+                <el-menu-item index="4-4">需求评估</el-menu-item>
+              </router-link>
+            </el-menu-item-group>
             <el-menu-item-group>
               <router-link to='/myuntreated/reviewReturnRevision' tag='p'>
-                <el-menu-item index="4-4">审核退回修订</el-menu-item>
+                <el-menu-item index="4-5">审核退回修订</el-menu-item>
               </router-link>
             </el-menu-item-group>
              <el-menu-item-group>
-              <el-menu-item index="4-5">评估退回修订</el-menu-item>
+              <el-menu-item index="4-6">评估退回修订</el-menu-item>
             </el-menu-item-group>
              <el-menu-item-group>
-              <el-menu-item index="4-6">费率确认</el-menu-item>
+              <el-menu-item index="4-7">费率确认</el-menu-item>
             </el-menu-item-group>
              <el-menu-item-group>
-              <el-menu-item index="4-7">产品名称确认</el-menu-item>
+              <el-menu-item index="4-8">产品名称确认</el-menu-item>
             </el-menu-item-group>
              <el-menu-item-group>
-              <el-menu-item index="4-8">宣传材料制作</el-menu-item>
+              <el-menu-item index="4-9">宣传材料制作</el-menu-item>
             </el-menu-item-group>
              <el-menu-item-group>
-              <el-menu-item index="4-9">上市申请</el-menu-item>
+              <el-menu-item index="4-10">上市申请</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-menu-item index="5">
@@ -137,6 +142,7 @@
     height: 100%;
     .el-menu-vertical-demo {
       height: 100%;
+      overflow: auto;
     }
   }
   /deep/ .el-col-21 {

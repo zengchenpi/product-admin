@@ -28,68 +28,59 @@
           @click="closeReview"
         ></i>
       </div>
-      <el-row :gutter="20">
-        <el-col :span="16">
-          <div class="grid-content bg-purple">基本信息</div>
-        </el-col>
-        <el-col :span="8">
-          <el-button type="primary" size="small">查看详情</el-button>
-        </el-col>
-      </el-row>
+
       <el-row :gutter="20">
         <el-col :span="8">
-          <div class="grid-content bg-purple">产品大类:年金</div>
-        </el-col>
-        <el-col :span="8">
-          <div class="grid-content bg-purple">产品类型:养老年金</div>
-        </el-col>
-        <el-col :span="8">
-          <div class="grid-content bg-purple">设计类型:万能</div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <div class="grid-content bg-purple">保险期间类型:长期</div>
-        </el-col>
-        <el-col :span="8">
-          <div class="grid-content bg-purple">提出人:张三</div>
+          <div class="grid-content bg-purple">审核人:李四</div>
         </el-col>
         <el-col :span="8">
           <div class="grid-content bg-purple">提出时间:2019-07-08</div>
         </el-col>
+        <el-col :span="8">
+          <div class="grid-content bg-purple">审核意见:退回</div>
+        </el-col>
       </el-row>
-      <div class="border"></div>
-      <div class="tit">
-        <span>审核意见</span>
-      </div>
-      <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
-      <div class="tit">
-        <span>审核历史</span>
-      </div>
-      <!-- <el-table :data="history" border style="width: 100%" @select="select">
+      <el-row :gutter="20">
+        <el-col :span="5">
+          <span>审核意见</span>
+        </el-col>
+        <el-col :span="13">
+          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
+        </el-col>
+        <el-col :span="5">
+          <el-button type="primary" size="small" style="margin-top:20px;" @click="viewHistory">审核历史</el-button>
+        </el-col>
+      </el-row>
+      <el-row style="text-align:center;margin-bottom:10px;">
+        <el-button type="primary" size="small">去修改</el-button>
+        <el-button size="small" @click="closeReview">取消</el-button>
+      </el-row>
+      <div v-show="reviewHistory" style="border:1px solid #ddd">
+           <el-table :data="history" border style="width: 100%" @select="select">
         <el-table-column align="center" prop="startTime" label="发起时间" min-width="100px"></el-table-column>
         <el-table-column align="center" prop="auditor" label="审核人" min-width="70px"></el-table-column>
         <el-table-column align="center" prop="finishTime" label="完成时间" min-width="100px"></el-table-column>
         <el-table-column align="center" prop="results" label="审核结果" min-width="80px"></el-table-column>
         <el-table-column align="center" prop="opinion" label="评估意见" min-width="108px"></el-table-column>
-      </el-table>-->
-      <el-row style="text-align:center">
-        <el-button type="success" size="small">同意</el-button>
-        <el-button type="primary" size="small">退回修订</el-button>
-        <el-button size="small" @click="closeReview">关闭</el-button>
+      </el-table>
+      <el-row style="text-align:center;margin-bottom:10px;">
+         <el-button size="small" type="info" @click="closeHistory">关闭</el-button>
       </el-row>
+       
+      </div>
+     
     </el-card>
   </div>
 </template>
 <style lang="scss" scoped>
 .page-review {
+  padding: 10px 20px;
   .dealWith {
     width: 500px;
     // height: 500px;
     position: fixed;
-    top: 50%;
+    top: 150px;
     left: 50%;
-    margin-top: -350px;
     margin-left: -250px;
     z-index: 10;
     font-size: 14px;
@@ -168,7 +159,32 @@ export default {
           state: "未提交"
         }
       ],
-      review:false,
+      history: [
+        {
+          startTime: "2019-10-29",
+          auditor: "小明",
+          finishTime: "2019-10-30",
+          results: "审核结果",
+          opinion: "评估意见"
+        },
+        {
+          startTime: "2019-10-29",
+          auditor: "小明",
+          finishTime: "2019-10-30",
+          results: "审核结果",
+          opinion: "评估意见"
+        },
+        {
+          startTime: "2019-10-29",
+          auditor: "小明",
+          finishTime: "2019-10-30",
+          results: "审核结果",
+          opinion: "评估意见"
+        }
+      ],
+      review: false,
+      textarea: "",
+      reviewHistory:false,
     };
   },
   methods: {
@@ -178,9 +194,6 @@ export default {
     onSubmit(Ideas) {
       console.log(Ideas);
     },
-    handleCheckedCitiesChange(...arg) {
-      console.log(arg);
-    },
     select(selection, row) {
       console.log(selection, row);
     },
@@ -188,9 +201,6 @@ export default {
       let name = data.type;
       console.log(name);
       this.$router.push("/add/template/" + name);
-    },
-    addNew() {
-      this.$router.push("/add/demand");
     },
     allocation() {
       this.allotShow = true;
@@ -232,6 +242,12 @@ export default {
     },
     closeReview() {
       this.review = false;
+    },
+    viewHistory(){
+        this.reviewHistory=true;
+    },
+    closeHistory(){
+        this.reviewHistory=false;
     }
   }
 };
