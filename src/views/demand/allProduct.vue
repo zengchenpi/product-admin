@@ -244,8 +244,11 @@ export default {
      },
    },
   methods: {
-    search() {
-      console.log(this.value);
+    search(value) {
+      console.log(value);
+    },
+    searchData(value){
+      console.log(value)
     },
     onSubmit(Ideas) {
       console.log(Ideas);

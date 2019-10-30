@@ -56,7 +56,7 @@
           size="medium"
           :type="item.type"
           :icon="item.icon"
-          @click="item.handleClick"
+          @click="item.handleClick(value)"
         >{{item.name}}</el-button>
       </el-button-group>
       <slot name="operate"></slot>
